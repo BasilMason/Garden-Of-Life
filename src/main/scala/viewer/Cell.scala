@@ -64,7 +64,7 @@ case class Cell(state: String) extends Box {cell =>
       cell.material = new PhongMaterial() {
         diffuseColor = Color.Transparent
         specularColor = Color.Transparent
-        visible = true
+        visible = false
       }
     }
 

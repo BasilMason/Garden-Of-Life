@@ -1,5 +1,6 @@
 package app
 
+import automaton.Automaton3d
 import garden.{Config, State}
 import viewer._
 
@@ -81,15 +82,18 @@ object GardenOfLife extends JFXApp {app =>
 
   /***** PRCCESSING *****/
 
+  /**
+    * Process cellular automaton and update with new configuration
+    */
   def step() = {
 
     cm.clearContent
-    //val nextConf = Automaton3d(curConf, xDim, yDim, zDim,c => c).next
-    //curConf = nextConf
-    //val c = cube(xDim, yDim, zDim, nextConf).flatten
-    //val g = new Group
-    //c.foreach(r => g.children.add(r))
-    //cm.setContent(g)
+    val nextConf = Automaton3d(curConf, xDim, yDim, zDim, c => c).next
+    curConf = nextConf
+    val c = cube(xDim, yDim, zDim, nextConf).flatten
+    val g = new Group
+    c.foreach(r => g.children.add(r))
+    cm.setContent(g)
 
   }
 

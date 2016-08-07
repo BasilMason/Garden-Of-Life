@@ -6,16 +6,16 @@ import garden._
   * Created by Basil on 13/07/2016.
   */
 trait Automaton {
-  def next: String
+  def next: List[State]
 }
 
 //case class Automaton3d(init: String, x: Int, y: Int, z: Int, rule: Cell => Cell) extends Automaton {
-case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => Cell) extends Automaton {
+case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, zrule: Cell => Cell) extends Automaton with BasicGarden {
 
   println(init.length)
   require(x * y * z == init.length)
 
-  val cells: List[Cell] = init.map(s => s match {
+  private val cells: List[Cell] = init.map(s => s match {
     case SkyState(s, w, sn, wa, g, v) => SkyCell(wind = w, water = wa, sun = sn, gravity = g, velocity = v)
     case GrassState(s, w, sn, wa, g, v) => GrassCell(wind = w, water = wa, sun = sn, gravity = g, velocity = v)
     case EarthState(s, w, sn, wa, g, v) => EarthCell(wind = w, water = wa, sun = sn, gravity = g, velocity = v)
@@ -23,12 +23,12 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
   })
 
   // form containers
-  val planes = cells.grouped(x * y).toList
-  val rows = planes.map(p => p.grouped(z).toList).flatten
+  private val planes = cells.grouped(x * y).toList
+  private val rows = planes.map(p => p.grouped(z).toList).flatten
 
   // Adjacent Neighbours
   // list of right neighbours
-  val rn = rows.flatMap(l => {
+  private val rn = rows.flatMap(l => {
     def h(acc: List[Cell], cells: List[Cell]): List[Cell] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: List(addCellNeighbour("RIGHT", x, NilCell()))
@@ -38,7 +38,7 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
   })
 
   // list of left neighbours reversed
-  val lnr = rows.flatMap(l => {
+  private val lnr = rows.flatMap(l => {
     def h(acc: List[Cell], cells: List[Cell]): List[Cell] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: List(addCellNeighbour("LEFT", x, NilCell()))
@@ -47,10 +47,10 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
     h(List(), l.reverse)
   })
   // list of left neighbours
-  val ln = lnr.grouped(z).toList.flatMap(l => l.reverse)
+  private val ln = lnr.grouped(z).toList.flatMap(l => l.reverse)
 
   // list of back neighbour pairs
-  val bnp = rows.grouped(y).toList.flatMap(l => {
+  private val bnp = rows.grouped(y).toList.flatMap(l => {
     def h(acc: List[(Cell, Cell)], cells: List[List[Cell]]): List[(Cell, Cell)] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: (x zip List.fill(x.length)(NilCell()))
@@ -59,10 +59,10 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
     h(List(), l)
   })
   // list of back neighbours
-  val bn = bnp.map(x => addCellNeighbour("BACK", x._1, x._2))
+  private val bn = bnp.map(x => addCellNeighbour("BACK", x._1, x._2))
 
   // list of front neighbour pairs reversed
-  val fnp = rows.grouped(y).toList.flatMap(l => {
+  private val fnp = rows.grouped(y).toList.flatMap(l => {
     def h(acc: List[(Cell, Cell)], cells: List[List[Cell]]): List[(Cell, Cell)] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: (x zip List.fill(x.length)(NilCell()))
@@ -71,13 +71,13 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
     h(List(), l.reverse)
   })
   // list of front neighbour pairs
-  val fnr = fnp.map(x => addCellNeighbour("FRONT", x._1, x._2))
+  private val fnr = fnp.map(x => addCellNeighbour("FRONT", x._1, x._2))
   // list of front neighbours
-  val fn = fnr.grouped(y).toList.flatMap(l => l.reverse)
+  private val fn = fnr.grouped(y).toList.flatMap(l => l.reverse)
     .grouped(x*y).toList.flatMap(l => l.reverse)
 
   // list of up neighbour pairs
-  val unp = {
+  private val unp = {
     def h(acc: List[(Cell, Cell)], cells: List[List[Cell]]): List[(Cell, Cell)] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: (x zip List.fill(x.length)(NilCell()))
@@ -86,10 +86,10 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
     h(List(), planes)
   }
   // list of up neighbours
-  val un = unp.map(x => addCellNeighbour("UP", x._1, x._2))
+  private val un = unp.map(x => addCellNeighbour("UP", x._1, x._2))
 
   // list of down neighbour pairs reversed
-  val dnp = {
+  private val dnp = {
     def h(acc: List[(Cell, Cell)], cells: List[List[Cell]]): List[(Cell, Cell)] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: (x zip List.fill(x.length)(NilCell()))
@@ -98,12 +98,12 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
     h(List(), planes.reverse)
   }
   // list of down neighbour pairs
-  val dnr = dnp.map(x => addCellNeighbour("DOWN", x._1, x._2))
+  private val dnr = dnp.map(x => addCellNeighbour("DOWN", x._1, x._2))
   // list of down neighbours
-  val dn = dnr.reverse.grouped(x*y).toList.flatMap(l => l.reverse)
+  private val dn = dnr.reverse.grouped(x*y).toList.flatMap(l => l.reverse)
 
   // all adjacent neighbours
-  val an = {
+  private val an = {
     def h(acc: List[Cell], ns: List[List[Cell]]): List[Cell] = ns match {
       case Nil => acc
       case x :: xs => h(for ( (m, a) <- (acc zip x)) yield addCellNeighbourNeighbour(m, a), xs)
@@ -112,7 +112,7 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
   }
 
   // Diagonal Neighbours
-  val en = an.map(c => {
+  private val en = an.map(c => {
     val crnbn = addCellNeighbourNeighbour("RIGHT_BACK", c, getNeighbour(c, bn, "RIGHT", "BACK"))
     val crnfn = addCellNeighbourNeighbour("RIGHT_FRONT", crnbn, getNeighbour(c, fn, "RIGHT", "FRONT"))
     val clnbn = addCellNeighbourNeighbour("LEFT_BACK", crnfn, getNeighbour(c, bn, "LEFT", "BACK"))
@@ -136,22 +136,7 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
     cdnfn
   })
 
-  def rle(cell: Cell): Cell = {
-    val ns = cell.neighbours
-    val s = {
-      def h(acc: Int, cs: List[Cell]): Int = cs match {
-        case Nil => acc
-        case x :: xs => x match {
-          case RedCell(n) => h(acc + 1, xs)
-          case _ => h(acc, xs)
-        }
-      }
-      h(0, ns.values.toList)
-    }
-    if (s > 2) RedCellWithNeighbour(cell.index, cell.neighbours) else cell
-  }
-
-  def getNeighbour(c: Cell, cs: List[Cell], first: String, second: String): Cell = c match {
+  private def getNeighbour(c: Cell, cs: List[Cell], first: String, second: String): Cell = c match {
     case NilCell(i) => NilCell()
     case y => y.neighbours.get(first) match {
       case None => NilCell()
@@ -165,7 +150,7 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
     }
   }
 
-  def getSecondNeighbour(c: Cell, cs: List[Cell], site: String): Cell = c match {
+  private def getSecondNeighbour(c: Cell, cs: List[Cell], site: String): Cell = c match {
     case NilCell(i) => NilCell()
     case x => {
       val a = cs.filter(c => c.index == x.index).head
@@ -173,32 +158,39 @@ case class Automaton3d(init: List[State], x: Int, y: Int, z: Int, rule: Cell => 
     }
   }
 
-  def addCellNeighbour(site: String, c: Cell, n: Cell): Cell = c match {
+  private def addCellNeighbour(site: String, c: Cell, n: Cell): Cell = c match {
     case RedCell(i) => RedCellWithNeighbour(i, Map(site -> n))
     case GreenCell(i) => GreenCellWithNeighbour(i, Map(site -> n))
     case BlueCell(i) => BlueCellWithNeighbour(i, Map(site -> n))
     case PadCell(i) => PadCellWithNeighbour(i, Map(site -> n))
+    case SkyCell(i, nei, w, sn, wa, g, v) => SkyCell(index = i, neighbours = Map(site -> n), wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case GrassCell(i, nei, w, sn, wa, g, v) => GrassCell(index = i, neighbours = Map(site -> n), wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case EarthCell(i, nei, w, sn, wa, g, v) => EarthCell(index = i, neighbours = Map(site -> n), wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case PlantCell(i, nei, w, sn, wa, g, v) => PlantCell(index = i, neighbours = Map(site -> n), wind = w, water = wa, sun = sn, gravity = g, velocity = v)
   }
 
-  def addCellNeighbourNeighbour(c: Cell, n: Cell): Cell = c match {
+  private def addCellNeighbourNeighbour(c: Cell, n: Cell): Cell = c match {
     case RedCellWithNeighbour(i, ns) => RedCellWithNeighbour(i, ns ++ n.neighbours)
     case GreenCellWithNeighbour(i, ns) => GreenCellWithNeighbour(i, ns ++ n.neighbours)
     case BlueCellWithNeighbour(i, ns) => BlueCellWithNeighbour(i, ns ++ n.neighbours)
     case PadCellWithNeighbour(i, ns) => PadCellWithNeighbour(i, ns ++ n.neighbours)
+    case SkyCell(i, nei, w, sn, wa, g, v) => SkyCell(index = i, neighbours = nei ++ n.neighbours, wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case GrassCell(i, nei, w, sn, wa, g, v) => GrassCell(index = i, neighbours = nei ++ n.neighbours, wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case EarthCell(i, nei, w, sn, wa, g, v) => EarthCell(index = i, neighbours = nei ++ n.neighbours, wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case PlantCell(i, nei, w, sn, wa, g, v) => PlantCell(index = i, neighbours = nei ++ n.neighbours, wind = w, water = wa, sun = sn, gravity = g, velocity = v)
   }
 
-  def addCellNeighbourNeighbour(site: String , c: Cell, n: Cell): Cell = c match {
+  private def addCellNeighbourNeighbour(site: String , c: Cell, n: Cell): Cell = c match {
     case RedCellWithNeighbour(i, ns) => RedCellWithNeighbour(i, ns + (site -> n))
     case GreenCellWithNeighbour(i, ns) => GreenCellWithNeighbour(i, ns + (site -> n))
     case BlueCellWithNeighbour(i, ns) => BlueCellWithNeighbour(i, ns + (site -> n))
     case PadCellWithNeighbour(i, ns) => PadCellWithNeighbour(i, ns + (site -> n))
+    case SkyCell(i, nei, w, sn, wa, g, v) => SkyCell(index = i, neighbours = nei + (site -> n), wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case GrassCell(i, nei, w, sn, wa, g, v) => GrassCell(index = i, neighbours = nei + (site -> n), wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case EarthCell(i, nei, w, sn, wa, g, v) => EarthCell(index = i, neighbours = nei + (site -> n), wind = w, water = wa, sun = sn, gravity = g, velocity = v)
+    case PlantCell(i, nei, w, sn, wa, g, v) => PlantCell(index = i, neighbours = nei + (site -> n), wind = w, water = wa, sun = sn, gravity = g, velocity = v)
   }
 
-  override def next: String = en.map(c => rle(c)).map(c => c match {
-    case RedCellWithNeighbour(i, ns) => "R"
-    case GreenCellWithNeighbour(i, ns) => "G"
-    case BlueCellWithNeighbour(i, ns) => "B"
-    case PadCellWithNeighbour(i, ns) => "P"
-  }).mkString
+  override def next: List[State] = en.map(c => rule(c)).map(c => c.state)
 
 }

@@ -43,19 +43,15 @@ case class NilCell(val index: Int = Generator.get()) extends Cell {
 case class NilCellWithNeighbour(val index: Int, val neighbours: Map[String, Cell]) extends Cell with Neighbourhood {
   override val state: State = NilState("N")
 }
-case class SkyCell(val index: Int = Generator.get(), wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
+case class SkyCell(val index: Int = Generator.get(), val neighbours: Map[String, Cell] = Map[String, Cell]().empty, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
   override val state: State = SkyState("SS", wind, sun, water, gravity, velocity)
-  override val neighbours = Map[String, Cell]().empty
 }
-case class GrassCell(val index: Int = Generator.get(), wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
+case class GrassCell(val index: Int = Generator.get(), val neighbours: Map[String, Cell] = Map[String, Cell]().empty, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
   override val state: State = GrassState("GS", wind, sun, water, gravity, velocity)
-  override val neighbours = Map[String, Cell]().empty
 }
-case class EarthCell(val index: Int = Generator.get(), wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
+case class EarthCell(val index: Int = Generator.get(), val neighbours: Map[String, Cell] = Map[String, Cell]().empty, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
   override val state: State = EarthState("ES", wind, sun, water, gravity, velocity)
-  override val neighbours = Map[String, Cell]().empty
 }
-case class PlantCell(val index: Int = Generator.get(), wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
+case class PlantCell(val index: Int = Generator.get(), val neighbours: Map[String, Cell] = Map[String, Cell]().empty, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
   override val state: State = PlantState("PS", wind, sun, water, gravity, velocity)
-  override val neighbours = Map[String, Cell]().empty
 }
