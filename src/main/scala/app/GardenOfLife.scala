@@ -1,6 +1,6 @@
 package app
 
-import automaton.Automaton3d
+import automaton.{Garden, ParGarden}
 import garden.{Config, State}
 import viewer._
 
@@ -39,7 +39,8 @@ object GardenOfLife extends JFXApp {app =>
 
   // initialisation
   def initGarden(): List[State] = {
-    Config.cells
+    //Config.basic333                                   // basic 3 * 3 * 3 garden, manual
+    Config.autoBasicFlat(xDim, yDim, zDim, List(101, 133))    // auto garden, flat
   }
 
   // application stage
@@ -51,6 +52,7 @@ object GardenOfLife extends JFXApp {app =>
         new Button {
           text = "Home"
           minWidth = 75
+          onAction = handle {step()}
         }, new Button {
           text = "Options"
           minWidth = 75
@@ -88,7 +90,11 @@ object GardenOfLife extends JFXApp {app =>
   def step() = {
 
     cm.clearContent
-    val nextConf = Automaton3d(curConf, xDim, yDim, zDim, c => c).next
+
+    println(System.nanoTime())
+    val nextConf = ParGarden(curConf, xDim, yDim, zDim).next
+    println(System.nanoTime())
+
     curConf = nextConf
     val c = cube(xDim, yDim, zDim, nextConf).flatten
     val g = new Group

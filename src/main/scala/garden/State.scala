@@ -24,4 +24,5 @@ case class SkyState(s: String, wind: Double, sun: Double, water: Double, gravity
 case class GrassState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends GardenState
 case class EarthState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends GardenState
 case class PlantState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends GardenState
+case class FlowerState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends GardenState
 

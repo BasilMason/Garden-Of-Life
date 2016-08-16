@@ -5,7 +5,9 @@ package garden
   */
 object Config {
 
-  private val r1 = List(EarthState(s = "ES" // 1
+  /** Basic 3 * 3 * 3 Garden **/
+
+  private val p1 = List(EarthState(s = "ES" // 1
     , wind = 0.0
     , sun = 0.0
     , water = 1.0
@@ -60,7 +62,7 @@ object Config {
       , gravity = 1.0
       , velocity = (0.0, 0.0, 0.0)))
 
-  private val r2 = List(GrassState(s = "GS" // 1
+  private val p2 = List(GrassState(s = "GS" // 1
     , wind = 0.0
     , sun = 0.0
     , water = 1.0
@@ -115,7 +117,7 @@ object Config {
       , gravity = 1.0
       , velocity = (0.0, 0.0, 0.0)))
 
-  private val r3 = List(SkyState(s = "SS" // 1
+  private val p3 = List(SkyState(s = "SS" // 1
     , wind = 0.0
     , sun = 0.0
     , water = 1.0
@@ -170,6 +172,43 @@ object Config {
       , gravity = 1.0
       , velocity = (0.0, 0.0, 0.0)))
 
-  val cells = r1 ::: r2 ::: r3
+  def basic333 = p1 ::: p2 ::: p3
+
+  /** auto garden - flat with plant only **/
+
+  def autoBasicFlat(x :Int, y: Int, z: Int, seeds: List[Int]): List[State] = {
+
+    val l = for {
+      xs <- (0 until x * y * z)
+    } yield {
+      if (seeds.contains(xs)) PlantState(s = "PS"
+                                        , wind = 0.0
+                                        , sun = 0.0
+                                        , water = 1.0
+                                        , gravity = 1.0
+                                        , velocity = (0.0, 1.0, 0.0))
+      else if (xs < x * y) EarthState(s = "ES"
+                                , wind = 0.0
+                                , sun = 0.0
+                                , water = 1.0
+                                , gravity = 1.0
+                                , velocity = (0.0, 0.0, 0.0))
+      else if (xs >= x * y && xs < 2 * x * y) GrassState(s = "GS"
+                                                        , wind = 0.0
+                                                        , sun = 0.0
+                                                        , water = 1.0
+                                                        , gravity = 1.0
+                                                        , velocity = (0.0, 0.0, 0.0))
+      else SkyState(s = "SS"
+                    , wind = 0.0
+                    , sun = 0.0
+                    , water = 1.0
+                    , gravity = 1.0
+                    , velocity = (0.0, 0.0, 0.0))
+    }
+
+    l.toList
+
+  }
 
 }

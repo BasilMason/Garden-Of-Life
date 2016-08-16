@@ -11,9 +11,9 @@ object App {
   final val TOOLBAR_HEIGHT = 20
 
   // Garden
-  final val X_DIM = 3
-  final val Y_DIM = 3
-  final val Z_DIM = 3
+  def X_DIM = 10
+  def Y_DIM = 10
+  def Z_DIM = 10
 
 
 }

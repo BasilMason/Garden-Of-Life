@@ -1,0 +1,14 @@
+P1
+- parallelism / AKKA
+- dynamic sizing
+- auto-configuration
+
+
+P2
+- transition rules / states
+
+
+
+P3
+- logging / console logging
+- start generic ScalaLib

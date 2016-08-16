@@ -1,15 +1,12 @@
 package automaton
 
 import garden._
+import parallel.TaskManager
 
 /**
-  * Created by Basil on 13/07/2016.
+  * Created by Basil on 09/08/2016.
   */
-trait Automaton {
-  def next: List[State]
-}
-
-case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton with BasicGarden {
+case class ParGarden(init: List[State], x: Int, y: Int, z: Int) extends Automaton with BasicGarden {
 
   require(x * y * z == init.length)
 
@@ -28,7 +25,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton w
 
   // Adjacent Neighbours
   // list of right neighbours
-  private val rn = rows.flatMap(l => {
+  private def rnc = rows.flatMap(l => {
     def h(acc: List[Cell], cells: List[Cell]): List[Cell] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: List(addCellNeighbour("RIGHT", x, NilCell()))
@@ -38,7 +35,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton w
   })
 
   // list of left neighbours reversed
-  private val lnr = rows.flatMap(l => {
+  private def lnr = rows.flatMap(l => {
     def h(acc: List[Cell], cells: List[Cell]): List[Cell] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: List(addCellNeighbour("LEFT", x, NilCell()))
@@ -47,10 +44,12 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton w
     h(List(), l.reverse)
   })
   // list of left neighbours
-  private val ln = lnr.grouped(z).toList.flatMap(l => l.reverse)
+  private def lnc = lnr.grouped(z).toList.flatMap(l => l.reverse)
+
+  //val (rn, ln) = TaskManager.parallel(rnc, lnc)
 
   // list of back neighbour pairs
-  private val bnp = rows.grouped(y).toList.flatMap(l => {
+  private def bnp = rows.grouped(y).toList.flatMap(l => {
     def h(acc: List[(Cell, Cell)], cells: List[List[Cell]]): List[(Cell, Cell)] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: (x zip List.fill(x.length)(NilCell()))
@@ -59,10 +58,10 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton w
     h(List(), l)
   })
   // list of back neighbours
-  private val bn = bnp.map(x => addCellNeighbour("BACK", x._1, x._2))
+  private def bnc = bnp.map(x => addCellNeighbour("BACK", x._1, x._2))
 
   // list of front neighbour pairs reversed
-  private val fnp = rows.grouped(y).toList.flatMap(l => {
+  private def fnp = rows.grouped(y).toList.flatMap(l => {
     def h(acc: List[(Cell, Cell)], cells: List[List[Cell]]): List[(Cell, Cell)] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: (x zip List.fill(x.length)(NilCell()))
@@ -71,13 +70,15 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton w
     h(List(), l.reverse)
   })
   // list of front neighbour pairs
-  private val fnr = fnp.map(x => addCellNeighbour("FRONT", x._1, x._2))
+  private def fnr = fnp.map(x => addCellNeighbour("FRONT", x._1, x._2))
   // list of front neighbours
-  private val fn = fnr.grouped(y).toList.flatMap(l => l.reverse)
+  private def fnc = fnr.grouped(y).toList.flatMap(l => l.reverse)
     .grouped(x*y).toList.flatMap(l => l.reverse)
 
+  val (rn, ln, bn, fn) = TaskManager.parallel(rnc, lnc, bnc, fnc)
+
   // list of up neighbour pairs
-  private val unp = {
+  private def unp = {
     def h(acc: List[(Cell, Cell)], cells: List[List[Cell]]): List[(Cell, Cell)] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: (x zip List.fill(x.length)(NilCell()))
@@ -86,10 +87,10 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton w
     h(List(), planes)
   }
   // list of up neighbours
-  private val un = unp.map(x => addCellNeighbour("UP", x._1, x._2))
+  private def unc = unp.map(x => addCellNeighbour("UP", x._1, x._2))
 
   // list of down neighbour pairs reversed
-  private val dnp = {
+  private def dnp = {
     def h(acc: List[(Cell, Cell)], cells: List[List[Cell]]): List[(Cell, Cell)] = cells match {
       case Nil => acc
       case x :: Nil => acc ::: (x zip List.fill(x.length)(NilCell()))
@@ -98,12 +99,14 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton w
     h(List(), planes.reverse)
   }
   // list of down neighbour pairs
-  private val dnr = dnp.map(x => addCellNeighbour("DOWN", x._1, x._2))
+  private def dnr = dnp.map(x => addCellNeighbour("DOWN", x._1, x._2))
   // list of down neighbours
-  private val dn = dnr.reverse.grouped(x*y).toList.flatMap(l => l.reverse)
+  private def dnc = dnr.reverse.grouped(x*y).toList.flatMap(l => l.reverse)
+
+  val (un, dn) = TaskManager.parallel(unc, dnc)
 
   // all adjacent neighbours
-  private val an = {
+  private def an = {
     def h(acc: List[Cell], ns: List[List[Cell]]): List[Cell] = ns match {
       case Nil => acc
       case x :: xs => h(for ( (m, a) <- (acc zip x)) yield addCellNeighbourNeighbour(m, a), xs)
@@ -112,7 +115,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int) extends Automaton w
   }
 
   // Diagonal Neighbours
-  private val en = an.map(c => {
+  private def en = an.map(c => {
     val crnbn = addCellNeighbourNeighbour("RIGHT_BACK", c, getNeighbour(c, bn, "RIGHT", "BACK"))
     val crnfn = addCellNeighbourNeighbour("RIGHT_FRONT", crnbn, getNeighbour(c, fn, "RIGHT", "FRONT"))
     val clnbn = addCellNeighbourNeighbour("LEFT_BACK", crnfn, getNeighbour(c, bn, "LEFT", "BACK"))

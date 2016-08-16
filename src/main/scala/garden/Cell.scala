@@ -55,3 +55,6 @@ case class EarthCell(val index: Int = Generator.get(), val neighbours: Map[Strin
 case class PlantCell(val index: Int = Generator.get(), val neighbours: Map[String, Cell] = Map[String, Cell]().empty, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
   override val state: State = PlantState("PS", wind, sun, water, gravity, velocity)
 }
+case class FlowerCell(val index: Int = Generator.get(), val neighbours: Map[String, Cell] = Map[String, Cell]().empty, wind: Double, sun: Double, water: Double, gravity: Double, velocity: (Double, Double, Double)) extends Cell {
+  override val state: State = FlowerState("FS", wind, sun, water, gravity, velocity)
+}
