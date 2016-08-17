@@ -27,16 +27,16 @@ class CoordGrid(init: List[State], x: Int, y: Int, z: Int) extends Automaton {
     (List("LEFT", "RIGHT", "BACK", "FRONT", "BOTTOM", "TOP") zip h(List(), in, 0)).toMap
   }
 
+  // get state and list of states
+  // call rule
+  // sequential and parallel
+
 
   override def next: List[State] = ???
 
-  private object Site {
-    final val BOTTOM = 0
-    final val TOP = 1
-    final val LEFT = 2
-    final val RIGHT = 3
-    final val FRONT = 4
-    final val BACK = 5
-  }
+
+  trait Site
+  case object Top extends Site
+  case object Bottom extends Site
 
 }

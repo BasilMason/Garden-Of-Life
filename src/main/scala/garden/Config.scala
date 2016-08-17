@@ -211,4 +211,29 @@ object Config {
 
   }
 
+  def allOn(x: Int, y: Int, z: Int): List[State] = {
+
+    val l = for {
+      xs <- (0 until x * y * z)
+    } yield RedState("R")
+
+    l.toList
+
+  }
+
+  def classic(x: Int, y: Int, z: Int): List[State] = {
+
+    val on = List(36 + (81 * 4) + 5)
+
+    val l = for {
+      xs <- (0 until x * y * z)
+    } yield {
+      if (on.contains(xs)) RedState("R")
+      else PadState("P")
+    }
+
+    l.toList
+
+  }
+
 }

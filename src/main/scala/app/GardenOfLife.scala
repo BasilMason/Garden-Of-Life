@@ -1,6 +1,6 @@
 package app
 
-import automaton.{Garden, ParGarden}
+import automaton.{Basic, Garden, ParGarden, Randomizer}
 import garden.{Config, State}
 import viewer._
 
@@ -26,12 +26,12 @@ object GardenOfLife extends JFXApp {app =>
   // application parameters
   private final val layout = new BorderPane()
   private final val cubes = new Group()
-  private final val cm = new ContentModel(App.APP_WIDTH, App.APP_HEIGHT - App.TOOLBAR_HEIGHT)
+  private final val cm = new ContentModel(APP_WIDTH, APP_HEIGHT - TOOLBAR_HEIGHT)
 
   // garden parameters
-  private final val xDim: Int = App.X_DIM
-  private final val yDim: Int = App.Y_DIM
-  private final val zDim: Int = App.Z_DIM
+  private final val xDim: Int = X_DIM
+  private final val yDim: Int = Y_DIM
+  private final val zDim: Int = Z_DIM
   private final val all = xDim * yDim * zDim
   private var curConf: List[State] = List.empty
 
@@ -40,7 +40,9 @@ object GardenOfLife extends JFXApp {app =>
   // initialisation
   def initGarden(): List[State] = {
     //Config.basic333                                   // basic 3 * 3 * 3 garden, manual
-    Config.autoBasicFlat(xDim, yDim, zDim, List(101, 133))    // auto garden, flat
+    //Config.autoBasicFlat(xDim, yDim, zDim, List(101, 133))    // auto garden, flat
+    Config.classic(xDim, yDim, zDim)  // classical 3D
+    //Config.allOn(xDim, yDim, zDim)    // all on!
   }
 
   // application stage
@@ -72,7 +74,7 @@ object GardenOfLife extends JFXApp {app =>
     layout.center = cm.getSubScene()
 
     // application scene
-    scene = new Scene(layout, App.APP_WIDTH, App.APP_HEIGHT, depthBuffer = true, antiAliasing = SceneAntialiasing.Balanced) {
+    scene = new Scene(layout, APP_WIDTH, APP_HEIGHT, depthBuffer = true, antiAliasing = SceneAntialiasing.Balanced) {
       fill = Color.Gray
       title = "Scala Garden"
     }
@@ -91,9 +93,11 @@ object GardenOfLife extends JFXApp {app =>
 
     cm.clearContent
 
-    println(System.nanoTime())
-    val nextConf = ParGarden(curConf, xDim, yDim, zDim).next
-    println(System.nanoTime())
+    //println(System.nanoTime())
+    //val nextConf = ParGarden(curConf, xDim, yDim, zDim).next
+    //val nextConf = Randomizer(curConf).next
+    val nextConf = Basic(curConf, xDim, yDim, zDim).next
+    //println(System.nanoTime())
 
     curConf = nextConf
     val c = cube(xDim, yDim, zDim, nextConf).flatten

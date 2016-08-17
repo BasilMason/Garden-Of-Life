@@ -1,9 +1,7 @@
-package app
-
 /**
-  * Created by Basil on 07/08/2016.
+  * Created by Basil on 17/08/2016.
   */
-object App {
+package object app {
 
   // Application
   final val APP_WIDTH = 1000
@@ -11,9 +9,8 @@ object App {
   final val TOOLBAR_HEIGHT = 20
 
   // Garden
-  def X_DIM = 10
-  def Y_DIM = 10
-  def Z_DIM = 10
-
+  def X_DIM = 9
+  def Y_DIM = 9
+  def Z_DIM = 9
 
 }
