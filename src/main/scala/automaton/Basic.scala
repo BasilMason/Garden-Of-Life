@@ -1,12 +1,13 @@
 package automaton
 import garden._
+import parallel.TaskManager
 
 
 
 /**
   * Created by Basil on 17/08/2016.
   */
-case class Basic(init: List[State], x: Int, y: Int, z: Int) extends Automaton {
+case class Basic(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends Automaton {
 
   type Global = List[State]
   type Coordinate = (Int, Int, Int)
@@ -54,6 +55,22 @@ case class Basic(init: List[State], x: Int, y: Int, z: Int) extends Automaton {
 
   }
 
+  def reduce(in: Configuration, t: Int): Global = {
+    if (in.length < t) {
+      traverse(in)
+    } else {
+
+      val m = in.length / 2
+      val l = in.take(m)
+      val r = in.drop(m)
+
+      val (t1, t2) = TaskManager.parallel(reduce(l, t), reduce(r, t))
+
+      t1 ::: t2
+
+    }
+  }
+
   def transition(current: State, ns: Neighbours): State = {
 
     val ss = ns.values.toList
@@ -78,7 +95,7 @@ case class Basic(init: List[State], x: Int, y: Int, z: Int) extends Automaton {
       , "TOP" -> (in._1, boundary(in._2 - 1), in._3)
       , "BOTTOM" -> (in._1, boundary(in._2 + 1), in._3)
       , "FRONT" -> (in._1, in._2, boundary(in._3 - 1))
-      , "BACK" -> (in._1, in._2, boundary(in._3 - 1))
+      , "BACK" -> (in._1, in._2, boundary(in._3 + 1))
     )
 
   }
@@ -91,12 +108,15 @@ case class Basic(init: List[State], x: Int, y: Int, z: Int) extends Automaton {
       case x :: xs => {
         val v = in(x)
         val e = op(v)
-        h(acc + (x -> e), xs.toSet)
+        h(acc + (x -> e), ks - x)
       }
     }
     h(Map.empty[A, C], in.keySet)
   }
 
-  override def next: List[State] = traverse(inputWithIndex)
+  override def next: List[State] = {
+    if (parallel) reduce(inputWithIndex, threshold)
+    else traverse(inputWithIndex)
+  }
 
 }

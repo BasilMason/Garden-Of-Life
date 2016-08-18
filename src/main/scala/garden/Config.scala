@@ -223,7 +223,7 @@ object Config {
 
   def classic(x: Int, y: Int, z: Int): List[State] = {
 
-    val on = List(36 + (81 * 4) + 5)
+    val on = List((x * y * z) / 2)
 
     val l = for {
       xs <- (0 until x * y * z)

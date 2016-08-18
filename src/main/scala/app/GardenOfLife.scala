@@ -96,7 +96,7 @@ object GardenOfLife extends JFXApp {app =>
     //println(System.nanoTime())
     //val nextConf = ParGarden(curConf, xDim, yDim, zDim).next
     //val nextConf = Randomizer(curConf).next
-    val nextConf = Basic(curConf, xDim, yDim, zDim).next
+    val nextConf = Basic(curConf, xDim, yDim, zDim, true, 200).next
     //println(System.nanoTime())
 
     curConf = nextConf
