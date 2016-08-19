@@ -10,14 +10,14 @@ import scalafx.scene.layout.HBox
 package object app {
 
   // Application
-  final val APP_WIDTH = 1000
-  final val APP_HEIGHT = 800
+  final val APP_WIDTH = 1500
+  final val APP_HEIGHT = 1200
   final val TOOLBAR_HEIGHT = 20
 
   // Garden
-  def X_DIM = 30
-  def Y_DIM = 30
-  def Z_DIM = 30
+  def X_DIM = 20
+  def Y_DIM = 20
+  def Z_DIM = 20
 
   /***** CONSTRUCTION *****/
 

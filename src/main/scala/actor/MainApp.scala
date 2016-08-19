@@ -1,11 +1,5 @@
 package actor
-
-import akka.actor.Actor.Receive
-import akka.actor.{Actor, ActorSystem, Props}
-import akka.routing.RoundRobinPool
-
-import scala.collection.mutable
-import scala.concurrent.duration.Duration
+import scala.util.Random
 /**
   * Created by Basil on 18/08/2016.
   *
@@ -13,65 +7,90 @@ import scala.concurrent.duration.Duration
   * http://doc.akka.io/docs/akka/snapshot/scala/futures.html
   *
   */
-class MainApp extends App {
+object MainApp extends App {
 
-//  sealed trait AutomatonMessage
-//  case object Calculate extends AutomatonMessage
-//  case class Work(rank: Int, file: Int) extends AutomatonMessage
-//  case class Result(states: List[Int]) extends AutomatonMessage
-//  case class Final(rows: mutable.Map[Int, List[Int]], time: Duration) extends AutomatonMessage
-//
-//
-//  val system = ActorSystem("AutomatonSystem")
-//  val resultHandler = system.actorOf(Props[Handler], name = "resultHandler")
-//
-//
-//  class Coordinator(numWorkers: Int) extends Actor {
-//
-//    var rows: mutable.Map[Int, List[Int]] = mutable.Map()
-//    var results = 0
-//    val start: Long = System.currentTimeMillis()
-//    val workerRouter = context.actorOf(Props[Worker].withRouter(RoundRobinPool(numWorkers)), name = "workerRouter")
-//
-//    override def receive: Receive = {
-//      case Calculate => {
-//        /// divide cube into rows
-//        for {
-//          x <- (1 to 2)
-//          y <- (1 to 2)
-//        }
-//        workerRouter ! Work(x,y)
-//      }
-//      case Result(ss) => {
-//        rows ++=
-//        results += 1
-//
-//        // complete
-//        if (results == numRows) {
-//          val t = (System.currentTimeMillis() - start).millis
-//          resultHandler ! Final(rows, t)
-//          context.stop(self)
-//        }
-//      }
-//    }
-//  }
+  type Coordinate = (Int, Int)
+  type Neighbours = Map[String, Int]
+  type Configuration = List[(Int, Int)]
+  type Grid = Map[Coordinate, (Int, Int)]
 
-  //
-  //  class Worker extends Actor {
-  //    override def receive: Receive = {
-  //      case Work(r, f) => sender ! Results
-  //    }
-  //  }
-  //
-  //  class Handler extends Actor {
-  //    override def receive: Receive = {
-  //      case Final(rs, t) => {
-  //
-  //
-  //        context.system.terminate()
-  //
-  //      }
-  //    }
-  //  }
+  val x = 4
+  val y = 4
+  val r = Random
+  val amp = 4
+  val init = for {
+    ys <- (0 until y)
+    xs <- (0 until x)
+  } yield (Math.abs(r.nextInt()) % amp)
+
+  val inputWithIndex = init.toList zipWithIndex
+  val grid = coordinateTable(inputWithIndex, x, y)
+  val noise = traverse(inputWithIndex)
+
+  println("Start: " + init)
+  println("Noise: " + noise)
+
+  def coordinateTable(init: Configuration, xDim: Int, yDim: Int): Grid = {
+    init.map(in => (indexToCoordinate(xDim, yDim)(in._2), in)).toMap
+  }
+
+  def indexToCoordinate(x: Int, y: Int)(i: Int): Coordinate = {
+    (
+      if (x==0) 0
+      else i % x,
+      if (y==0) 0
+      else (if (x==0) 0
+      else (i / x) % y)
+      )
+  }
+  def getCoordinate = indexToCoordinate(x, y)(_)
+
+  def boundary(i: Int): Int = i
+  def neighbours(in: Coordinate): Map[String, Coordinate] = {
+
+    Map(
+      "LEFT" -> (boundary(in._1 - 1), in._2)
+      , "RIGHT" -> (boundary(in._1 + 1), in._2)
+      , "TOP" -> (in._1, boundary(in._2 - 1))
+      , "BOTTOM" -> (in._1, boundary(in._2 + 1))
+    )
+
+  }
+
+  def traverse(in: Configuration): List[Int] = {
+
+    in.map(c => {
+      val state = c._1
+      val index = c._2
+      val coord = getCoordinate(index)
+      val n = neighbours(coord)
+      val ns = neighbourStates(n)
+      transition(state, ns)
+    })
+
+  }
+
+  def transition(current: Int, ns: Neighbours): Int = {
+
+    val ss: List[Int] = ns.values.toList.filter(x => x >= 0)
+    ss.sum / ss.length
+
+  }
+
+  def neighbourStates(in: Map[String, Coordinate]): Neighbours = mapToMap[String, Coordinate, Int](in, c => grid.getOrElse(c, (-1, -1))._1)
+
+  def mapToMap[A,B,C](in: Map[A, B], op: B => C): Map[A, C] = {
+    def h(acc: Map[A, C], ks: Set[A]): Map[A, C] = ks.toList match {
+      case Nil => acc
+      case x :: xs => {
+        val v = in(x)
+        val e = op(v)
+        h(acc + (x -> e), ks - x)
+      }
+    }
+    h(Map.empty[A, C], in.keySet)
+  }
+
+
 
 }

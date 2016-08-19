@@ -1,5 +1,8 @@
 package garden
 
+import scala.collection.mutable
+import scala.util.Random
+
 /**
   * Created by Basil on 13/07/2016.
   */
@@ -205,6 +208,60 @@ object Config {
                     , water = 1.0
                     , gravity = 1.0
                     , velocity = (0.0, 0.0, 0.0))
+    }
+
+    l.toList
+
+  }
+
+  def autoBasicRandom(x :Int, y: Int, z: Int): List[State] = {
+
+    val r = Random
+    val amp = 4
+    val noise = Noise.getNoise(x, y, amp)
+
+    val m: mutable.Map[(Int, Int), Int] = mutable.Map(noise: _*)
+
+    val l = for {
+      zs <- (0 until z)
+      ys <- (0 until y)
+      xs <- (0 until x)
+    } yield {
+
+      val h = m.getOrElse((xs, ys), -1)
+
+      if (h > 0) {
+        m((xs, ys)) -= 1
+        EarthState(s = "ES"
+          , wind = 0.0
+          , sun = 0.0
+          , water = 1.0
+          , gravity = 1.0
+          , velocity = (0.0, 0.0, 0.0))
+      } else if (h == 0) {
+        m((xs, ys)) -= 1
+
+        if (r.nextInt % 10 == 0) PlantState(s = "PS"
+          , wind = 0.0
+          , sun = 0.0
+          , water = 1.0
+          , gravity = 1.0
+          , velocity = (0.0, 1.0, 0.0))
+        else GrassState(s = "GS"
+          , wind = 0.0
+          , sun = 0.0
+          , water = 1.0
+          , gravity = 1.0
+          , velocity = (0.0, 0.0, 0.0))
+      } else {
+        SkyState(s = "SS"
+          , wind = 0.0
+          , sun = 0.0
+          , water = 1.0
+          , gravity = 1.0
+          , velocity = (0.0, 0.0, 0.0))
+      }
+
     }
 
     l.toList
