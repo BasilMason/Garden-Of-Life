@@ -40,7 +40,7 @@ object GardenOfLife extends JFXApp {app =>
   // initialisation
   def initGarden(): List[State] = {
     //Config.basic333                                   // basic 3 * 3 * 3 garden, manual
-    //Config.autoBasicFlat(xDim, yDim, zDim, List(150))    // auto garden, flat
+    //Config.autoBasicFlat(xDim, yDim, zDim, List(135))    // auto garden, flat
     //Config.classic(xDim, yDim, zDim)  // classical 3D
     //Config.allOn(xDim, yDim, zDim)    // all on!
     Config.autoBasicRandom(xDim, yDim, zDim)
@@ -95,10 +95,10 @@ object GardenOfLife extends JFXApp {app =>
     cm.clearContent
 
     //println(System.nanoTime())
-    val nextConf = Garden(curConf, xDim, yDim, zDim).next
+    //val nextConf = Garden(curConf, xDim, yDim, zDim).next
     //val nextConf = ParGarden(curConf, xDim, yDim, zDim).next
     //val nextConf = Randomizer(curConf).next
-    //val nextConf = Basic(curConf, xDim, yDim, zDim, true, 200).next
+    val nextConf = Basic(curConf, xDim, yDim, zDim, true, 200).next
     //println(System.nanoTime())
 
     curConf = nextConf

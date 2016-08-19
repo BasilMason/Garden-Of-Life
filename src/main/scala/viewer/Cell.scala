@@ -65,6 +65,9 @@ case class Cell(state: String) extends Box {cell =>
         diffuseColor = Color.Transparent
         specularColor = Color.Transparent
         visible = false
+//        diffuseColor = Color.Blue
+//        specularColor = Color.Blue
+//        visible = true
       }
     }
     case "FS" => {

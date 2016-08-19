@@ -15,9 +15,9 @@ package object app {
   final val TOOLBAR_HEIGHT = 20
 
   // Garden
-  def X_DIM = 20
-  def Y_DIM = 20
-  def Z_DIM = 20
+  def X_DIM = 50
+  def Y_DIM = 50
+  def Z_DIM = 15
 
   /***** CONSTRUCTION *****/
 

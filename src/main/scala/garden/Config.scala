@@ -217,7 +217,7 @@ object Config {
   def autoBasicRandom(x :Int, y: Int, z: Int): List[State] = {
 
     val r = Random
-    val amp = 4
+    val amp = 5
     val noise = Noise.getNoise(x, y, amp)
 
     val m: mutable.Map[(Int, Int), Int] = mutable.Map(noise: _*)

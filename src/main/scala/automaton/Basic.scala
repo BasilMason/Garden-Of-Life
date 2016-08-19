@@ -73,16 +73,36 @@ case class Basic(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, t
 
   def transition(current: State, ns: Neighbours): State = {
 
-    val ss = ns.values.toList
-    val cs = ss.map(s => s match {
-      case RedState(st) => 1
-      case _ => 0
-    }).sum
+    // basic sum type
+//    val ss = ns.values.toList
+//    val cs = ss.map(s => s match {
+//      case RedState(st) => 1
+//      case _ => 0
+//    }).sum
+//
+//    cs match {
+//      case n if n > 0 && n < 3 => RedState("R")
+//      case _ => PadState("P")
+//    }
 
-    cs match {
-      case n if n > 0 && n < 3 => RedState("R")
-      case _ => PadState("P")
+
+    current match {
+
+      // Sky
+      case SkyState(s, wi, sn, wa, g, v) => {
+        ns.get("BOTTOM") match {
+          case None => current
+          case Some(c) => c match {
+            case PlantState(s, wi, sn, wa, g, v) => PlantState(s, wi, sn, wa, g, v)
+            case _ => current
+          }
+        }
+      }
+
+      case _ => current
+
     }
+
 
   }
 
@@ -92,10 +112,11 @@ case class Basic(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, t
     Map(
       "LEFT" -> (boundary(in._1 - 1), in._2, in._3)
       , "RIGHT" -> (boundary(in._1 + 1), in._2, in._3)
-      , "TOP" -> (in._1, boundary(in._2 - 1), in._3)
-      , "BOTTOM" -> (in._1, boundary(in._2 + 1), in._3)
-      , "FRONT" -> (in._1, in._2, boundary(in._3 - 1))
-      , "BACK" -> (in._1, in._2, boundary(in._3 + 1))
+      , "TOP" -> (in._1, in._2, boundary(in._3 + 1))
+      , "BOTTOM" -> (in._1, in._2, boundary(in._3 - 1))
+      , "FRONT" -> (in._1, boundary(in._2 - 1), in._3)
+      , "BACK" -> (in._1, boundary(in._2 + 1), in._3)
+
     )
 
   }
