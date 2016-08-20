@@ -1,5 +1,7 @@
 package automaton.garden
 
+import automaton.Vect
+
 import scala.collection.mutable
 import scala.util.Random
 
@@ -15,165 +17,219 @@ object Config {
     , sun = 0.0
     , water = 1.0
     , gravity = 1.0
-    , velocity = (0.0, 0.0, 0.0))
+    , velocity = Vect(0.0, 0.0, 0.0)
+    , age = 0
+    , volume = 1)
     , EarthState(s = "ES" // 2
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , EarthState(s = "ES" // 3
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , EarthState(s = "ES" // 4
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , EarthState(s = "ES" // 5
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , EarthState(s = "ES" // 6
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , EarthState(s = "ES" // 7
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , EarthState(s = "ES" // 8
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , EarthState(s = "ES" // 9
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0)))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1))
 
   private val p2 = List(GrassState(s = "GS" // 1
     , wind = 0.0
     , sun = 0.0
     , water = 1.0
     , gravity = 1.0
-    , velocity = (0.0, 0.0, 0.0))
+    , velocity = Vect(0.0, 0.0, 0.0)
+    , age = 0
+    , volume = 1)
     , GrassState(s = "GS" // 2
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , GrassState(s = "GS" // 3
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , GrassState(s = "GS" // 4
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , PlantState(s = "PS" // 5
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 1.0, 0.0))
+      , velocity = Vect(0.0, 1.0, 0.0)
+      , age = 0
+      , volume = 1)
     , GrassState(s = "GS" // 6
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , GrassState(s = "GS" // 7
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , GrassState(s = "GS" // 8
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , GrassState(s = "GS" // 9
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0)))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1))
 
   private val p3 = List(SkyState(s = "SS" // 1
     , wind = 0.0
     , sun = 0.0
     , water = 1.0
     , gravity = 1.0
-    , velocity = (0.0, 0.0, 0.0))
+    , velocity = Vect(0.0, 0.0, 0.0)
+    , age = 0
+    , volume = 1)
     , SkyState(s = "SS" // 2
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , SkyState(s = "SS" // 3
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , SkyState(s = "SS" // 4
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , SkyState(s = "SS" // 5
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , SkyState(s = "SS" // 6
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , SkyState(s = "SS" // 7
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , SkyState(s = "SS" // 8
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1)
     , SkyState(s = "SS" // 9
       , wind = 0.0
       , sun = 0.0
       , water = 1.0
       , gravity = 1.0
-      , velocity = (0.0, 0.0, 0.0)))
+      , velocity = Vect(0.0, 0.0, 0.0)
+      , age = 0
+      , volume = 1))
 
   def basic333 = p1 ::: p2 ::: p3
 
@@ -189,25 +245,33 @@ object Config {
                                         , sun = 0.0
                                         , water = 1.0
                                         , gravity = 1.0
-                                        , velocity = (0.0, 0.0, 1.0))
+                                        , velocity = Vect(0.0, 0.0, 1.0)
+                                        , age = 0
+                                        , volume = 1)
       else if (xs < x * y) EarthState(s = "ES"
                                 , wind = 0.0
                                 , sun = 0.0
                                 , water = 1.0
                                 , gravity = 1.0
-                                , velocity = (0.0, 0.0, 0.0))
+                                , velocity = Vect(0.0, 0.0, 0.0)
+                                , age = 0
+                                , volume = 1)
       else if (xs >= x * y && xs < 2 * x * y) GrassState(s = "GS"
                                                         , wind = 0.0
                                                         , sun = 0.0
                                                         , water = 1.0
                                                         , gravity = 1.0
-                                                        , velocity = (0.0, 0.0, 0.0))
+                                                        , velocity = Vect(0.0, 0.0, 0.0)
+                                                        , age = 0
+                                                        , volume = 1)
       else SkyState(s = "SS"
                     , wind = 0.0
                     , sun = 0.0
                     , water = 1.0
                     , gravity = 1.0
-                    , velocity = (0.0, 0.0, 0.0))
+                    , velocity = Vect(0.0, 0.0, 0.0)
+                    , age = 0
+                    , volume = 1)
     }
 
     l.toList
@@ -237,7 +301,9 @@ object Config {
           , sun = 0.0
           , water = 1.0
           , gravity = 1.0
-          , velocity = (0.0, 0.0, 0.0))
+          , velocity = Vect(0.0, 0.0, 0.0)
+          , age = 0
+          , volume = 1)
       } else if (h == 0) {
         m((xs, ys)) -= 1
 
@@ -246,20 +312,26 @@ object Config {
           , sun = 0.0
           , water = 1.0
           , gravity = 1.0
-          , velocity = (0.0, 0.0, 1.0))
+          , velocity = Vect(0.0, 0.0, 1.0)
+          , age = 0
+          , volume = 1)
         else GrassState(s = "GS"
           , wind = 0.0
           , sun = 0.0
           , water = 1.0
           , gravity = 1.0
-          , velocity = (0.0, 0.0, 0.0))
+          , velocity = Vect(0.0, 0.0, 0.0)
+          , age = 0
+          , volume = 1)
       } else {
         SkyState(s = "SS"
           , wind = 0.0
           , sun = 0.0
           , water = 1.0
           , gravity = 1.0
-          , velocity = (0.0, 0.0, 0.0))
+          , velocity = Vect(0.0, 0.0, 0.0)
+          , age = 0
+          , volume = 1)
       }
 
     }
@@ -272,7 +344,7 @@ object Config {
 
     val l = for {
       xs <- (0 until x * y * z)
-    } yield RedState("R")
+    } yield RedState("R", Vect(0.0,0.0,0.0))
 
     l.toList
 
@@ -285,8 +357,8 @@ object Config {
     val l = for {
       xs <- (0 until x * y * z)
     } yield {
-      if (on.contains(xs)) RedState("R")
-      else PadState("P")
+      if (on.contains(xs)) RedState("R", Vect(0.0,0.0,0.0))
+      else PadState("P", Vect(0.0,0.0,0.0))
     }
 
     l.toList

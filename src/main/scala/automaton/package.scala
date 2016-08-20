@@ -12,4 +12,6 @@ package object automaton {
   type Grid = Map[Coordinate, Cell]
   type Cell = (State, Int)
 
+  case class Vect(x: Double, y: Double, z: Double)
+
 }

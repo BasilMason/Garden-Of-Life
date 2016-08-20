@@ -3,6 +3,7 @@ package application
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import akka.actor.Actor.Receive
 import akka.routing.RoundRobinPool
+import automaton.Vect
 import automaton.automata.Garden
 import automaton.garden.{Config, PadState, RedState, State}
 import viewer.ContentModel
@@ -20,6 +21,7 @@ import scalafx.util.Duration
 
 /**
   * Created by Basil on 18/08/2016.
+  * http://blog.scottlogic.com/2014/08/15/using-akka-and-scala-to-render-a-mandelbrot-set.html
   */
 object AkkaOfLife extends JFXApp {app =>
 
@@ -235,13 +237,13 @@ object AkkaOfLife extends JFXApp {app =>
 
     val ss = ns.values.toList
     val cs = ss.map(s => s match {
-      case RedState(st) => 1
+      case RedState(st, v) => 1
       case _ => 0
     }).sum
 
     cs match {
-      case n if n > 0 && n < 3 => RedState("R")
-      case _ => PadState("P")
+      case n if n > 0 && n < 3 => RedState("R", Vect(0.0,0.0,0.0))
+      case _ => PadState("P", Vect(0.0,0.0,0.0))
     }
 
   }
@@ -260,7 +262,7 @@ object AkkaOfLife extends JFXApp {app =>
 
   }
 
-  def neighbourStates(in: Map[String, Coordinate], space: Grid): Neighbours = mapToMap[String, Coordinate, State](in, c => space.getOrElse(c, (PadState("P"), -1))._1)
+  def neighbourStates(in: Map[String, Coordinate], space: Grid): Neighbours = mapToMap[String, Coordinate, State](in, c => space.getOrElse(c, (PadState("P", Vect(0.0,0.0,0.0)), -1))._1)
 
   def mapToMap[A,B,C](in: Map[A, B], op: B => C): Map[A, C] = {
     def h(acc: Map[A, C], ks: Set[A]): Map[A, C] = ks.toList match {

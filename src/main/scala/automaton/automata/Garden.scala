@@ -9,7 +9,7 @@ import parallel.TaskManager
 /**
   * Created by Basil on 17/08/2016.
   */
-case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends Automata with BasicGarden {
+case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends Automata with AllNeighbours {
 
   require(init.length == x * y * z, "Number of states provided must match dimensions")
 
@@ -70,8 +70,8 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, 
   def neighbours(in: Coordinate): Map[String, Coordinate] = {
 
     Map(
-      "LEFT" -> (boundary(in._1 - 1), in._2, in._3)
-      , "RIGHT" -> (boundary(in._1 + 1), in._2, in._3)
+      "RIGHT" -> (boundary(in._1 - 1), in._2, in._3)
+      , "LEFT" -> (boundary(in._1 + 1), in._2, in._3)
       , "TOP" -> (in._1, in._2, boundary(in._3 + 1))
       , "BOTTOM" -> (in._1, in._2, boundary(in._3 - 1))
       , "FRONT" -> (in._1, boundary(in._2 - 1), in._3)
@@ -81,7 +81,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, 
 
   }
 
-  def neighbourStates(in: Map[String, Coordinate]): Neighbours = mapToMap[String, Coordinate, State](in, c => grid.getOrElse(c, (PadState("P"), -1))._1)
+  def neighbourStates(in: Map[String, Coordinate]): Neighbours = mapToMap[String, Coordinate, State](in, c => grid.getOrElse(c, (PadState("P", Vect(0.0,0.0,0.0)), -1))._1)
 
   def mapToMap[A,B,C](in: Map[A, B], op: B => C): Map[A, C] = {
     def h(acc: Map[A, C], ks: Set[A]): Map[A, C] = ks.toList match {
