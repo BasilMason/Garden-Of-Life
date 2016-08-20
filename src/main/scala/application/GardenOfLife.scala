@@ -1,6 +1,6 @@
 package application
 
-import automaton.automata.{Basic, Randomizer}
+import automaton.automata.{Garden, Randomizer}
 import automaton.garden.{Config, State}
 import viewer._
 
@@ -39,11 +39,15 @@ object GardenOfLife extends JFXApp {app =>
 
   // initialisation
   def initGarden(): List[State] = {
-    //Config.basic333                                   // basic 3 * 3 * 3 automaton.garden, manual
-    //Config.autoBasicFlat(xDim, yDim, zDim, List(13))    // auto automaton.garden, flat
-    //Config.classic(xDim, yDim, zDim)  // classical 3D
-    //Config.allOn(xDim, yDim, zDim)    // all on!
+
+    // Config.basic333
+    // Config.autoBasicFlat(xDim, yDim, zDim, List(13))
+    // Config.classic(xDim, yDim, zDim)
+    // Config.allOn(xDim, yDim, zDim)
+    // Config.autoBasicRandom(xDim, yDim, zDim)
+
     Config.autoBasicRandom(xDim, yDim, zDim)
+
   }
 
   // application stage
@@ -94,14 +98,10 @@ object GardenOfLife extends JFXApp {app =>
 
     cm.clearContent
 
-    //println(System.nanoTime())
-    //val nextConf = Garden(curConf, xDim, yDim, zDim).next
-    //val nextConf = ParGarden(curConf, xDim, yDim, zDim).next
-    //val nextConf = Randomizer(curConf).next
-    //val nextConf = Basic(curConf, xDim, yDim, zDim, true, 200).next
-    //println(System.nanoTime())
+    // Randomizer(curConf).next
+    // Garden(curConf, xDim, yDim, zDim, true, 200).next
 
-    curConf = Basic(curConf, xDim, yDim, zDim, true, 200).next
+    curConf = Garden(curConf, xDim, yDim, zDim, true, 200).next
     val c = cube(xDim, yDim, zDim, curConf).flatten
     val g = new Group
     c.foreach(r => g.children.add(r))

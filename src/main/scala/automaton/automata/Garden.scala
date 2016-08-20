@@ -9,7 +9,7 @@ import parallel.TaskManager
 /**
   * Created by Basil on 17/08/2016.
   */
-case class Basic(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends Automata with BasicGarden {
+case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends Automata with BasicGarden {
 
   require(init.length == x * y * z, "Number of states provided must match dimensions")
 

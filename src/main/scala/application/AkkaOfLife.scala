@@ -3,7 +3,7 @@ package application
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import akka.actor.Actor.Receive
 import akka.routing.RoundRobinPool
-import automaton.automata.Basic
+import automaton.automata.Garden
 import automaton.garden.{Config, PadState, RedState, State}
 import viewer.ContentModel
 

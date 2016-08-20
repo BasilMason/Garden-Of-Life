@@ -2,6 +2,8 @@ package automaton.garden
 
 import automaton.Neighbours
 
+import scala.util.Random
+
 /**
   * Created by Basil on 07/08/2016.
   *
@@ -68,4 +70,18 @@ trait BasicGarden extends Transition {
 
   }
 
+}
+
+trait RandomGenerator extends Transition {
+  override def rule(current: State, ns: Neighbours): State = {
+    current match {
+      case RedState(st) => GreenState("G")
+      case PadState(st) => {
+        val r = Random
+        if (r.nextInt > 0) BlueState("B")
+        else PadState(st)
+      }
+      case _ => RedState("R")
+    }
+  }
 }
