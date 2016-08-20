@@ -281,7 +281,7 @@ object Config {
   def autoBasicRandom(x :Int, y: Int, z: Int): List[State] = {
 
     val r = Random
-    val amp = 3
+    val amp = 7
     val noise = Noise.getNoise(x, y, amp)
 
     val m: mutable.Map[(Int, Int), Int] = mutable.Map(noise: _*)
@@ -324,7 +324,23 @@ object Config {
           , age = 0
           , volume = 1)
       } else {
-        SkyState(s = "SS"
+        if ((zs == 40 || zs == 41 || zs == 42) && (ys == 6 || ys == 7 || ys == 8) && (xs == 2 || xs == 3 || xs == 4)) SunState(s = "NS"
+          , wind = 0.0
+          , sun = 0.0
+          , water = 1.0
+          , gravity = 1.0
+          , velocity = Vect(0.0, 0.0, 0.0)
+          , age = 0
+          , volume = 1)
+        else if ((zs == 31 || zs == 32) && r.nextInt % 4 == 0) SkyState(s = "CS"
+          , wind = 0.0
+          , sun = 0.0
+          , water = 1.0
+          , gravity = 1.0
+          , velocity = Vect(0.0, 0.0, 0.0)
+          , age = 0
+          , volume = 1)
+        else SkyState(s = "SS"
           , wind = 0.0
           , sun = 0.0
           , water = 1.0

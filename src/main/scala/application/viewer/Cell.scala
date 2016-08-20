@@ -77,6 +77,27 @@ case class Cell(state: String) extends Box {cell =>
         visible = true
       }
     }
+    case "NS" => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.Yellow
+        specularColor = Color.LightYellow
+        visible = true
+      }
+    }
+    case "TS" => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.RosyBrown
+        specularColor = Color.RosyBrown
+        visible = true
+      }
+    }
+    case "CS" => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.LightGray
+        specularColor = Color.LightGray
+        visible = true
+      }
+    }
 
   }
 

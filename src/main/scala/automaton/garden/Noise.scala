@@ -46,7 +46,9 @@ object Noise {
     def transition(current: Int, ns: Neighbours): Int = {
 
       val ss: List[Int] = ns.values.toList.filter(x => x >= 0)
-      ss.sum / ss.length
+      val av: Int = ((ss.sum / ss.length) * 75) / 100
+
+      av
 
     }
 

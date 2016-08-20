@@ -30,4 +30,7 @@ case class GrassState(s: String, wind: Double, sun: Double, water: Double, gravi
 case class EarthState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: Vect, age: Int, volume: Int) extends GardenState
 case class PlantState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: Vect, age: Int, volume: Int) extends GardenState
 case class FlowerState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: Vect, age: Int, volume: Int) extends GardenState
+case class SunState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: Vect, age: Int, volume: Int) extends GardenState
+case class TreeState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: Vect, age: Int, volume: Int) extends GardenState
+case class CloudState(s: String, wind: Double, sun: Double, water: Double, gravity: Double, velocity: Vect, age: Int, volume: Int) extends GardenState
 
