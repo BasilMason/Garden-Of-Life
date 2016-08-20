@@ -9,7 +9,7 @@ import parallel.TaskManager
 /**
   * Created by Basil on 17/08/2016.
   */
-case class Basic(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends Automata {
+case class Basic(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends Automata with BasicGarden {
 
   require(init.length == x * y * z, "Number of states provided must match dimensions")
 
@@ -45,7 +45,7 @@ case class Basic(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, t
       val coord = getCoordinate(index)
       val n = neighbours(coord)
       val ns = neighbourStates(n)
-      transition(state, ns)
+      rule(state, ns)
     })
 
   }
@@ -64,57 +64,6 @@ case class Basic(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, t
       t1 ::: t2
 
     }
-  }
-
-  def transition(current: State, ns: Neighbours): State = {
-
-    // basic sum type
-//    val ss = ns.values.toList
-//    val cs = ss.map(s => s match {
-//      case RedState(st) => 1
-//      case _ => 0
-//    }).sum
-//
-//    cs match {
-//      case n if n > 0 && n < 3 => RedState("R")
-//      case _ => PadState("P")
-//    }
-
-
-    current match {
-
-      // Sky
-      case SkyState(s, wi, sn, wa, g, v) => {
-        ns.get("BOTTOM") match {
-          case None => current
-          case Some(c) => c match {
-            case PlantState(s, wi, sn, wa, g, v) if v._3 < 0.6 => {
-              FlowerState("FS", wi, sn, wa, g, v)
-            }
-            case PlantState(s, wi, sn, wa, g, v) => PlantState(s, wi, sn, wa, g, (v._1, v._2, v._3 - 0.1))
-            case FlowerState(s, wi, sn, wa, g, v) => FlowerState(s, wi, sn, wa, g, v)
-            case SkyState(s, wi, sn, wa, g, v) => {
-              ns.get("LEFT") match {
-                case None => current
-                case Some(c) => c match {
-                  case FlowerState(s, wi, sn, wa, g, v) => FlowerState(s, wi, sn, wa, g, v)
-                  case _ => current
-                }
-              }
-            }
-            case _ => current
-          }
-        }
-      }
-      case PlantState(s, wi, sn, wa, g, v) => PlantState(s, wi, sn, wa, g, (v._1, v._2, v._3 - 0.1))
-
-      case FlowerState(s, wi, sn, wa, g, v) => FlowerState(s, wi, sn, wa, g, v)
-
-      case _ => current
-
-    }
-
-
   }
 
   def boundary(i: Int): Int = i
