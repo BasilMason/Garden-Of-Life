@@ -41,7 +41,7 @@ class ContentModel(height: Double, width: Double) {sub =>
 
   buildCamera()
   buildSubScene()
-  buildAxes()
+  //buildAxes()
 
   private def buildCamera() {
 
@@ -52,9 +52,11 @@ class ContentModel(height: Double, width: Double) {sub =>
     cameraXform3.rotateZ = 180.0
     camera.nearClip = 0.1
     camera.farClip = 10000.0
+    //camera.translateX = -100
     camera.translateZ = -cameraDistance
-    cameraXform.ry.angle = 320.0
-    cameraXform.rx.angle = 40
+    cameraXform.ry.angle = 0.0  //320.0
+    cameraXform.rx.angle = 90.0  //40
+    cameraXform.rz.angle = 0.0  //40
   }
 
   private def buildSubScene() = {
@@ -99,8 +101,9 @@ class ContentModel(height: Double, width: Double) {sub =>
 
   def getSubScene() = subScene
 
-  def setContent(content: Node) = {
+  def setContent(content: Node, xTrans: Int, yTrans: Int, zTrans: Int) = {
     allCells = allCells ::: content :: Nil
+    allCells.foreach(c => c.setTranslateX(-85))
     root.children.add(content)
   }
 

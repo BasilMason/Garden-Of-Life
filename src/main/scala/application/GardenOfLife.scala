@@ -1,14 +1,15 @@
 package application
 
 import automaton.automata.{Garden, Randomizer}
-import automaton.garden.{Config, State}
+import automaton.garden.{Config, GardenState, State}
 import viewer._
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.collections.ObservableBuffer
 import scalafx.geometry.Insets
-import scalafx.scene.control.{Button, ToolBar}
+import scalafx.scene.control.{Button, ChoiceBox, ToolBar}
 import scalafx.scene.input.{KeyCode, KeyEvent}
 import scalafx.scene.layout.{BorderPane, HBox}
 import scalafx.scene.paint.Color
@@ -33,12 +34,12 @@ object GardenOfLife extends JFXApp {app =>
   private final val yDim: Int = Y_DIM
   private final val zDim: Int = Z_DIM
   private final val all = xDim * yDim * zDim
-  private var curConf: List[State] = List.empty
+  private var curConf: List[GardenState] = List.empty
 
   /***** INITIALISATION *****/
 
   // initialisation
-  def initGarden(): List[State] = {
+  def initGarden(): List[GardenState] = {
 
     // Config.basic333
     // Config.autoBasicFlat(xDim, yDim, zDim, List(13))
@@ -66,6 +67,11 @@ object GardenOfLife extends JFXApp {app =>
         }, new Button {
           text = "Help"
           minWidth = 75
+        }, new ChoiceBox[String]{
+          maxWidth = 80
+          maxHeight = 20
+          items = ObservableBuffer("Flat", "Dynamic")
+          selectionModel().selectFirst()
         }
       )
     }
@@ -75,7 +81,7 @@ object GardenOfLife extends JFXApp {app =>
     val c = cube(xDim, yDim, zDim, curConf).flatten
     val g = new Group
     c.foreach(r => g.children.add(r))
-    cm.setContent(g)
+    cm.setContent(g, 0, 0, 0)
     layout.center = cm.getSubScene()
 
     // application scene
@@ -105,7 +111,7 @@ object GardenOfLife extends JFXApp {app =>
     val c = cube(xDim, yDim, zDim, curConf).flatten
     val g = new Group
     c.foreach(r => g.children.add(r))
-    cm.setContent(g)
+    cm.setContent(g, 0, 0, 0)
 
   }
 

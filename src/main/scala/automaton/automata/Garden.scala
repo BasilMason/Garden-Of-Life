@@ -9,7 +9,7 @@ import parallel.TaskManager
 /**
   * Created by Basil on 17/08/2016.
   */
-case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends Automata with AllNeighbours {
+case class Garden(init: List[GardenState], x: Int, y: Int, z: Int, parallel: Boolean, threshold: Int) extends GardenAutomaton with AllNeighbours {
 
   require(init.length == x * y * z, "Number of states provided must match dimensions")
 
@@ -18,7 +18,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, 
 
   /* M E T H O D S */
 
-  def coordinateTable(init: Configuration, xDim: Int, yDim: Int, zDim: Int): Grid = {
+  def coordinateTable(init: GConfiguration, xDim: Int, yDim: Int, zDim: Int): GGrid = {
     init.map(in => (indexToCoordinate(xDim, yDim, zDim)(in._2), in)).toMap
   }
 
@@ -37,7 +37,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, 
 
   def getCoordinate = indexToCoordinate(x, y, z)(_)
 
-  def traverse(in: Configuration): Global = {
+  def traverse(in: GConfiguration): GGlobal = {
 
     in.map(c => {
       val state = c._1
@@ -50,7 +50,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, 
 
   }
 
-  def reduce(in: Configuration, t: Int): Global = {
+  def reduce(in: GConfiguration, t: Int): GGlobal = {
     if (in.length < t) {
       traverse(in)
     } else {
@@ -81,7 +81,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, 
 
   }
 
-  def neighbourStates(in: Map[String, Coordinate]): Neighbours = mapToMap[String, Coordinate, State](in, c => grid.getOrElse(c, (PadState("P", Vect(0.0,0.0,0.0)), -1))._1)
+  def neighbourStates(in: Map[String, Coordinate]): GNeighbours = mapToMap[String, Coordinate, GardenState](in, c => grid.getOrElse(c, (VoidState(0.0, 0.0, 0.0, 0.0, Vect(0.0, 0.0, 0.0), 0, 0), -1))._1)
 
   def mapToMap[A,B,C](in: Map[A, B], op: B => C): Map[A, C] = {
     def h(acc: Map[A, C], ks: Set[A]): Map[A, C] = ks.toList match {
@@ -95,7 +95,7 @@ case class Garden(init: List[State], x: Int, y: Int, z: Int, parallel: Boolean, 
     h(Map.empty[A, C], in.keySet)
   }
 
-  override def next: List[State] = {
+  override def next: List[GardenState] = {
     if (parallel) reduce(inputWithIndex, threshold)
     else traverse(inputWithIndex)
   }

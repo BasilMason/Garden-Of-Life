@@ -67,7 +67,7 @@ object AkkaOfLife extends JFXApp {app =>
     val c = cube(xDim, yDim, zDim, curConf).flatten
     val g = new Group
     c.foreach(r => g.children.add(r))
-    cm.setContent(g)
+    cm.setContent(g, 0, 0, 0)
     layout.center = cm.getSubScene()
 
     // application scene
@@ -110,7 +110,7 @@ object AkkaOfLife extends JFXApp {app =>
     val c = cube(xDim, yDim, zDim, next).flatten
     val g = new Group
     c.foreach(r => g.children.add(r))
-    cm.setContent(g)
+    cm.setContent(g, 0, 0, 0)
 
   }
 
@@ -237,13 +237,13 @@ object AkkaOfLife extends JFXApp {app =>
 
     val ss = ns.values.toList
     val cs = ss.map(s => s match {
-      case RedState(st, v) => 1
+      case RedState => 1
       case _ => 0
     }).sum
 
     cs match {
-      case n if n > 0 && n < 3 => RedState("R", Vect(0.0,0.0,0.0))
-      case _ => PadState("P", Vect(0.0,0.0,0.0))
+      case n if n > 0 && n < 3 => RedState
+      case _ => PadState
     }
 
   }
@@ -262,7 +262,7 @@ object AkkaOfLife extends JFXApp {app =>
 
   }
 
-  def neighbourStates(in: Map[String, Coordinate], space: Grid): Neighbours = mapToMap[String, Coordinate, State](in, c => space.getOrElse(c, (PadState("P", Vect(0.0,0.0,0.0)), -1))._1)
+  def neighbourStates(in: Map[String, Coordinate], space: Grid): Neighbours = mapToMap[String, Coordinate, State](in, c => space.getOrElse(c, (PadState, -1))._1)
 
   def mapToMap[A,B,C](in: Map[A, B], op: B => C): Map[A, C] = {
     def h(acc: Map[A, C], ks: Set[A]): Map[A, C] = ks.toList match {

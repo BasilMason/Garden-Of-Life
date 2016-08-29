@@ -1,12 +1,14 @@
 package application.viewer
 
+import automaton.garden._
+
 import scalafx.scene.paint.{Color, PhongMaterial}
 import scalafx.scene.shape.Box
 
 /**
   * Created by Basil on 13/07/2016.
   */
-case class Cell(state: String) extends Box {cell =>
+case class Cell(state: State) extends Box {cell =>
 
   cell.width = 10
   cell.height = 10
@@ -14,53 +16,65 @@ case class Cell(state: String) extends Box {cell =>
 
   state match {
 
-    case "G" => {
+    case GreenState => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.DarkGreen
         specularColor = Color.Green
       }
     }
-    case "B" => {
+    case BlueState => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.DarkBlue
         specularColor = Color.Blue
       }
     }
-    case "R" => {
+    case RedState => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.DarkRed
         specularColor = Color.Purple
       }
     }
-    case "P" => {
+    case Alive => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.DarkBlue
+        specularColor = Color.Blue
+      }
+    }
+    case Dead => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.DarkRed
+        specularColor = Color.Purple
+      }
+    }
+    case PadState => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.Transparent
         specularColor = Color.Transparent
         visible = false
       }
     }
-    case "PS" => {
+    case PlantState(wi, sn, wa, g, v, a, vlm) => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.LightGreen
         specularColor = Color.LightGreen
         visible = true
       }
     }
-    case "ES" => {
+    case EarthState(wi, sn, wa, g, v, a, vlm) => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.Brown
         specularColor = Color.Brown
         visible = true
       }
     }
-    case "GS" => {
+    case GrassState(wi, sn, wa, g, v, a, vlm) => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.DarkGreen
         specularColor = Color.DarkGreen
         visible = true
       }
     }
-    case "SS" => {
+    case SkyState(wi, sn, wa, g, v, a, vlm) => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.Transparent
         specularColor = Color.Transparent
@@ -70,32 +84,39 @@ case class Cell(state: String) extends Box {cell =>
 //        visible = true
       }
     }
-    case "FS" => {
+    case FlowerState(wi, sn, wa, g, v, a, vlm) => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.HotPink
         specularColor = Color.HotPink
         visible = true
       }
     }
-    case "NS" => {
+    case SunState(wi, sn, wa, g, v, a, vlm) => {
       cell.material = new PhongMaterial() {
-        diffuseColor = Color.Yellow
+        diffuseColor = Color.rgb(255, 173, 1)
         specularColor = Color.LightYellow
         visible = true
       }
     }
-    case "TS" => {
+    case TreeState(wi, sn, wa, g, v, a, vlm) => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.RosyBrown
         specularColor = Color.RosyBrown
         visible = true
       }
     }
-    case "CS" => {
+    case CloudState(wi, sn, wa, g, v, a, vlm) => {
       cell.material = new PhongMaterial() {
         diffuseColor = Color.LightGray
         specularColor = Color.LightGray
         visible = true
+      }
+    }
+    case VoidState(wi, sn, wa, g, v, a, vlm) => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.Transparent
+        specularColor = Color.Transparent
+        visible = false
       }
     }
 

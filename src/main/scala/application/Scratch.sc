@@ -1,5 +1,11 @@
-val i = 63
-val p: Int = (i * 75) / 100
+var l = List(1,2,3)
+val n = List(4,5)
+val m = n ::: l
+l = m
+println(l)
+
+
+
 
 
 
