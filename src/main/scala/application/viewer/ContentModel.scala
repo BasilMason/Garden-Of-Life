@@ -26,7 +26,7 @@ class ContentModel(height: Double, width: Double) {sub =>
   private final val cameraXform = new Xform()
   private final val cameraXform2 = new Xform()
   private final val cameraXform3 = new Xform()
-  private final val cameraDistance: Double = 800
+  private final val cameraDistance: Double = 1500
 
   // mouse
   private var mousePosX: Double = .0
@@ -103,7 +103,7 @@ class ContentModel(height: Double, width: Double) {sub =>
 
   def setContent(content: Node, xTrans: Int, yTrans: Int, zTrans: Int) = {
     allCells = allCells ::: content :: Nil
-    allCells.foreach(c => c.setTranslateX(-85))
+    allCells.foreach(c => c.setTranslateX(-xTrans))
     root.children.add(content)
   }
 
