@@ -1,5 +1,5 @@
 package automaton.automata
-import automaton.garden.{BinaryState, Dead, Rule90}
+import automaton.garden.{BinaryState, Dead, Rule90, State}
 
 /**
   * Created by Basil on 29/08/2016.
@@ -20,3 +20,5 @@ case class OneDimensional(init: List[BinaryState], len: Int) extends ClassicalAu
     initWithIndex.map(p => rule(p._1, neighbours(p._2)))
   }
 }
+
+

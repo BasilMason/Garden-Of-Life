@@ -30,6 +30,7 @@ object TestApp extends JFXApp {
   private var curConfGar: List[GardenState] = List.empty
   private var histConfGar: List[GardenState] = List.empty
   private var dimensionsChoice = "1D"
+  private var perfChoice = "None"
   private var typeChoice = "Classical"
   private var xDim = 10
   private var yDim = 10
@@ -194,6 +195,73 @@ object TestApp extends JFXApp {
     )
   }
 
+  // right
+
+  // perf selector
+
+  val perfLabel = new Label {
+    text = "Performance: ?"
+    style = "-fx-font-size: 1em;"
+  }
+
+  val perfToggle = new ToggleGroup {
+    selectedToggle.onChange(
+      (_, oldValue, newValue) => perfChoiceHandler(newValue.asInstanceOf[JfxToggleBtn].getText)
+    )
+  }
+
+  val perfSelector = new VBox {
+    vgrow = Priority.Always
+    hgrow = Priority.Always
+    spacing = 10
+    padding = Insets(20)
+    children = List(
+      new HBox {
+        spacing = 6
+        children = List(
+          new ToggleButton {
+            minWidth = 50
+            text = "None"
+            toggleGroup = perfToggle
+          },
+          new ToggleButton {
+            minWidth = 50
+            text = "Parallel"
+            toggleGroup = perfToggle
+          },
+          new ToggleButton {
+            minWidth = 50
+            text = "AKKA"
+            toggleGroup = perfToggle
+          })
+      },
+      perfLabel
+    )
+  }
+
+  val logArea = new TextArea {
+    editable = false
+    promptText = "Logging..."
+    minHeight = 500
+  }
+
+  val rightPane = new VBox {
+    maxWidth = 244
+    minWidth = 244
+    vgrow = Priority.Always
+    hgrow = Priority.Always
+    spacing = 10
+    padding = Insets(20)
+    alignmentInParent = Pos.Center
+    children = List(
+      perfSelector,
+      new Separator(),
+      logArea
+    )
+  }
+
+  // top
+
   val topPane = new ToolBar {
     minHeight = 70
     maxHeight = 70
@@ -216,10 +284,11 @@ object TestApp extends JFXApp {
 
   stage = new PrimaryStage {
     title = "Test"
-    scene = new Scene(1200,800) {
+    scene = new Scene(1444,800) {
 
       layout.top = topPane
       layout.left = leftPane
+      layout.right = rightPane
       layout.center = cm.getSubScene()
       content = List(layout)
 
@@ -240,6 +309,14 @@ object TestApp extends JFXApp {
     typeChoice = t
 
   }
+
+  def perfChoiceHandler(ca: String) = {
+
+    perfLabel.text = "Performance: " + ca
+    perfChoice = ca
+
+  }
+
 
   def startAutomaton() = {
 

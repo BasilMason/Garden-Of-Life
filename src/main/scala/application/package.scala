@@ -1,5 +1,6 @@
 import automaton.garden.State
-import application.viewer.Cell
+import application.viewer.{Cell, NCellN}
+import newauto.NState
 
 import scalafx.geometry.Insets
 import scalafx.scene.layout.HBox
@@ -87,6 +88,25 @@ package object application {
       case _ => {
         val s = conf.head
         val c = Cell(s)
+        c.translateX = z
+        List(c) ::: h(acc, length - 1, z + 15, conf.tail)}
+    }
+
+    h(acc, x, z, conf)
+
+  }
+
+  def rowN(x: Int, conf: List[NState]): List[NCellN] = {
+
+    val acc = List()
+    val z = 0
+
+    def h(acc: List[NCellN], length: Int, z: Int, conf: List[NState]): List[NCellN] = length match {
+
+      case 0 => acc
+      case _ => {
+        val s = conf.head
+        val c = NCellN(s)
         c.translateX = z
         List(c) ::: h(acc, length - 1, z + 15, conf.tail)}
     }
