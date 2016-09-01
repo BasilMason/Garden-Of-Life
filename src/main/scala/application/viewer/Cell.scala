@@ -142,6 +142,7 @@ case class NCellN(state: NState) extends Box {cell =>
       cell.material = new PhongMaterial() {
         diffuseColor = Color.DarkRed
         specularColor = Color.Purple
+        visible = false
       }
     }
   }

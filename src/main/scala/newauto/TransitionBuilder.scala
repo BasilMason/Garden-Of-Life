@@ -33,4 +33,18 @@ case object TransitionBuilder {
 
   }
 
+  def threeDimBasic: (NState, Neighbours) => NState = (s, ns) => {
+
+    val l = ns("LEFT")
+    val r = ns("RIGHT")
+    val t = ns("TOP")
+    val b = ns("BOTTOM")
+    val bb = ns("BACK")
+    val f = ns("FRONT")
+
+    if (l.currentState == NAlive || t.currentState == NAlive || b.currentState == NAlive || r.currentState == NAlive || bb.currentState == NAlive || f.currentState == NAlive) NAlive
+    else NDead
+
+  }
+
 }

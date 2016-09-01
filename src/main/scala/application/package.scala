@@ -52,6 +52,28 @@ package object application {
 
   }
 
+  def cubeN(x: Int, y: Int, z: Int, conf: List[NState]): List[List[HBox]] = {
+
+    // initialise cube
+    val acc = List()
+    val d = 0
+    val subConfs = conf.grouped(x * y).toList
+
+    // constructor
+    def h(acc: List[List[HBox]], length: Int, d: Int, confs: List[List[NState]]): List[List[HBox]] = length match {
+      case 0 => acc
+      case _ => {
+        val p = planeN(x, y, confs.head)
+        p.map(c => c.translateY = d)
+        List(p) ::: h(acc, length - 1, d + 15, confs.tail)
+      }
+    }
+
+    // return
+    h(acc, z, d, subConfs)
+
+  }
+
   def plane(x: Int, y: Int, conf: List[State]): List[HBox] = {
 
     val acc = List()
@@ -69,6 +91,31 @@ package object application {
           padding = Insets(5)
         }
         r.foreach(c => hb.children.add(c: Cell))
+        List(hb) ::: h(acc, length - 1, z + 15, conf.tail)
+      }
+    }
+
+    h(acc, x, z, subConfs)
+
+  }
+
+  def planeN(x: Int, y: Int, conf: List[NState]): List[HBox] = {
+
+    val acc = List()
+    val z = 0
+    val subConfs = conf.grouped(y).toList
+
+    def h(acc: List[HBox], length: Int, z: Int, conf: List[List[NState]]): List[HBox] = length match {
+      case 0 => acc
+      case _ => {
+        val r = rowN(y, conf.head)
+        r.map(c => c.translateX = 0)
+        val hb = new HBox {
+          translateZ = z
+          spacing = 5
+          padding = Insets(5)
+        }
+        r.foreach(c => hb.children.add(c: NCellN))
         List(hb) ::: h(acc, length - 1, z + 15, conf.tail)
       }
     }

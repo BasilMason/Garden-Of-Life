@@ -5,5 +5,6 @@ package object newauto {
   type Neighbours = Map[Site, NCell]
   type Neighbourhood = Map[VectorN, Neighbours]
   type Transition = (NState, Neighbours) => NState
+  type Configuration = List[NCell]
 
 }

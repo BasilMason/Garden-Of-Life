@@ -35,3 +35,13 @@ case class OneDim(override val state: List[NCell])(x: Int) extends AutomatonTemp
 
 }
 
+case class ThreeDim(override val state: List[NCell])(x: Int, y: Int, z: Int) extends AutomatonTemplate(state) {
+
+  override def constructGrid: List[NCell] => Grid = GridBuilder.threeDimenionalgrid(x, y, z)
+
+  override def defineNeighbours: Grid => Neighbourhood = NeighbourhoodBuilder.threeDimensionalRadiusOne(x, y, z)
+
+  //override def traverseAutomaton: (Grid, Neighbourhood) => List[NCell] = TraversalBuilder.threeDimensionalTraversal(x, y, z)
+  override def traverseAutomaton: (Grid, Neighbourhood) => List[NCell] = TraversalBuilder.threeDimensionalTraversal(x, y, z)
+
+}

@@ -20,4 +20,19 @@ case object NConfig {
 
   }
 
+  def classical(x: Int, y: Int, z: Int): List[NCell] = {
+
+    val on = List((x * y * z) / 2)
+
+    val l = for {
+      xs <- (0 until x * y * z)
+    } yield {
+      if (on.contains(xs)) NCellFactory.getNCellBasic3dAlive
+      else NCellFactory.getNCellBasic3dDead
+    }
+
+    l.toList
+
+  }
+
 }

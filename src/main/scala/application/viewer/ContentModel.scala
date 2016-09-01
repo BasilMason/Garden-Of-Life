@@ -41,7 +41,7 @@ class ContentModel(height: Double, width: Double) {sub =>
 
   buildCamera()
   buildSubScene()
-  //buildAxes()
+  buildAxes()
 
   private def buildCamera() {
 
