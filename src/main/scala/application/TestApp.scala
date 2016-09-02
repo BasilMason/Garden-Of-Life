@@ -6,6 +6,7 @@ import javafx.scene.control.{ToggleButton => JfxToggleBtn}
 import application.viewer.ContentModel
 import automaton.automata.{Garden, OneDimensional}
 import automaton.garden.{BinaryState, Config, GardenState}
+import newauto.{GardenPar, NCell, NConfig}
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -25,6 +26,7 @@ object TestApp extends JFXApp {
   private final val layout = new BorderPane()
   private final val cubes = new Group()
   private final val cm = new ContentModel(1200 - 244, 800 - 70)
+  private var curConfN: List[NCell] = List.empty
   private var curConfBin: List[BinaryState] = List.empty
   private var histConfBin: List[BinaryState] = List.empty
   private var curConfGar: List[GardenState] = List.empty
@@ -334,6 +336,8 @@ object TestApp extends JFXApp {
     dimensionsChoice match {
       case "1D" => {
 
+        cm.clearContent
+
         curConfBin = Config.oneDimensional(xDim)
         histConfBin = curConfBin
         val c = plane(histCount,xDim, curConfBin)
@@ -341,8 +345,21 @@ object TestApp extends JFXApp {
         c.foreach(r => g.children.add(r))
         cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
       }
-      case "2D" => ???
+      case "2D" => {
+
+        cm.clearContent
+
+        curConfN = NConfig.rugged(xDim, yDim, zDim)
+        val c = cubeN(xDim, yDim, zDim, curConfN.map(c => c.currentState)).flatten
+        val g = new Group
+        c.foreach(r => g.children.add(r))
+        cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
+        layout.center = cm.getSubScene()
+
+      }
       case "3D" => {
+
+        cm.clearContent
 
         curConfGar = Config.autoBasicRandom(xDim, yDim, zDim)
         val c = cube(xDim, yDim, zDim, curConfGar).flatten
@@ -378,7 +395,17 @@ object TestApp extends JFXApp {
         cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
 
       }
-      case "2D" => ???
+      case "2D" => {
+
+        cm.clearContent
+
+        curConfN = GardenPar(curConfN)(xDim, yDim, zDim)(3).next
+        val c = cubeN(xDim, yDim, zDim, curConfN.map(c => c.currentState)).flatten
+        val g = new Group
+        c.foreach(r => g.children.add(r))
+        cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
+
+      }
       case "3D" => {
 
         cm.clearContent
