@@ -1,7 +1,7 @@
 package application.viewer
 
 import automaton.garden._
-import newauto.{NAlive, NCell, NDead, NState}
+import newauto._
 
 import scalafx.scene.paint.{Color, PhongMaterial}
 import scalafx.scene.shape.Box
@@ -143,6 +143,34 @@ case class NCellN(state: NState) extends Box {cell =>
         diffuseColor = Color.DarkRed
         specularColor = Color.Purple
         visible = false
+      }
+    }
+    case NSky(wa, sn, wi) => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.Transparent
+        specularColor = Color.Transparent
+        visible = false
+      }
+    }
+    case NSoil(wa, sn, wi) => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.Brown
+        specularColor = Color.Brown
+        visible = true
+      }
+    }
+    case NGrass(wa, sn, wi, vl, ag, vm) => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.DarkGreen
+        specularColor = Color.DarkGreen
+        visible = true
+      }
+    }
+    case NPlant(wa, sn, wi, vl, ag, vm) => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.LightGreen
+        specularColor = Color.LightGreen
+        visible = true
       }
     }
   }

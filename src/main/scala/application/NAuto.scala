@@ -1,7 +1,7 @@
 package application
 
 import application.viewer.ContentModel
-import newauto.{NCell, NConfig, OneDim, ThreeDim}
+import newauto._
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -21,9 +21,9 @@ object NAuto extends JFXApp {
   private final val cm = new ContentModel(600, 600)
 
   // automaton.garden parameters
-  private final val xDim: Int = 51
-  private final val yDim: Int = 51
-  private final val zDim: Int = 51
+  private final val xDim: Int = 3
+  private final val yDim: Int = 3
+  private final val zDim: Int = 3
   private final val all = xDim * yDim * zDim
   private var curConf: List[NCell] = List.empty
 
@@ -31,7 +31,8 @@ object NAuto extends JFXApp {
 
   // initialisation
   //def initGarden(): List[NCell] = NConfig.classical(xDim)
-  def initGarden(): List[NCell] = NConfig.classical(xDim, yDim, zDim)
+  //def initGarden(): List[NCell] = NConfig.classical(xDim, yDim, zDim)
+  def initGarden(): List[NCell] = NConfig.flat(xDim, yDim, zDim, List(Vector3(1,1,1)))
 
   // application stage
   stage = new PrimaryStage {
@@ -83,7 +84,8 @@ object NAuto extends JFXApp {
     // Garden(curConf, xDim, yDim, zDim, true, 200).next
 
     //curConf = OneDim(curConf)(xDim).next
-    curConf = ThreeDim(curConf)(xDim, yDim, zDim).next
+    //curConf = ThreeDim(curConf)(xDim, yDim, zDim).next
+    curConf = GardenPar(curConf)(xDim, yDim, zDim)(1).next
     val c = cubeN(xDim, yDim, zDim, curConf.map(c => c.currentState)).flatten
     //val c = rowN(xDim, curConf.map(c => c.currentState))
     val g = new Group

@@ -13,4 +13,9 @@ case object NCellFactory {
   def getNCellBasic3dAlive: NCell = NewCell(NAlive, basic3d)
   def getNCellBasic3dDead: NCell = NewCell(NDead, basic3d)
 
+  def getNCellGardenSoil: NCell = NewCell(NSoil(10.0, 1.0, 1.0), TransitionBuilder.basicSoil)
+  def getNCellGardenSky: NCell = NewCell(NSky(10.0, 1.0, 1.0), TransitionBuilder.basicSky)
+  def getNCellGardenGrass: NCell = NewCell(NGrass(10.0, 1.0, 1.0, Vector3(0, 0, 1), 0, 1), TransitionBuilder.basicGrass)
+  def getNCellGardenPlant: NCell = NewCell(NPlant(10.0, 1.0, 1.0, Vector3(0, 0, 1), 0, 1), TransitionBuilder.basicPlant)
+
 }

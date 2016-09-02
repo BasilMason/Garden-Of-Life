@@ -34,7 +34,7 @@ object TraversalBuilder {
 
   }
 
-  def threeDimensionalTraversalPar(x: Int, y: Int, z: Int): (Grid, Neighbourhood) => List[NCell] = (g, ns) => {
+  def threeDimensionalTraversalPar(x: Int, y: Int, z: Int)(t: Int): (Grid, Neighbourhood) => List[NCell] = (g, ns) => {
 
     def traverse(beginning: Int, end: Int): List[NCell] = {
 
@@ -62,6 +62,6 @@ object TraversalBuilder {
 
     }
 
-    reduce(0, z, 10)
+    reduce(0, z, t)
   }
 }

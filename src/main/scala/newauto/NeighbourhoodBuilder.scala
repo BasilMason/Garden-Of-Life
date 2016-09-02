@@ -17,12 +17,12 @@ case object NeighbourhoodBuilder {
 
     g.map(p => (p._1, p._1 match {
       case Vector3(i, j, k) => Map(
-        "RIGHT" -> g.getOrElse(Vector3(i - 1, j, k), NewCell(NDead,(s,n) => s))
-        , "LEFT" -> g.getOrElse(Vector3(i + 1, j, k), NewCell(NDead,(s,n) => s))
-        , "TOP" -> g.getOrElse(Vector3(i, j - 1, k), NewCell(NDead,(s,n) => s))
-        , "BOTTOM" -> g.getOrElse(Vector3(i, j + 1, k), NewCell(NDead,(s,n) => s))
-        , "FRONT" -> g.getOrElse(Vector3(i, j, k - 1), NewCell(NDead,(s,n) => s))
-        , "BACK" -> g.getOrElse(Vector3(i, j, k + 1), NewCell(NDead,(s,n) => s))
+        "RIGHT" -> g.getOrElse(Vector3(i + 1, j, k), NewCell(NDead,(s,n) => s))
+        , "LEFT" -> g.getOrElse(Vector3(i - 1, j, k), NewCell(NDead,(s,n) => s))
+        , "TOP" -> g.getOrElse(Vector3(i, j + 1, k), NewCell(NDead,(s,n) => s))
+        , "BOTTOM" -> g.getOrElse(Vector3(i, j - 1, k), NewCell(NDead,(s,n) => s))
+        , "FRONT" -> g.getOrElse(Vector3(i, j, k + 1), NewCell(NDead,(s,n) => s))
+        , "BACK" -> g.getOrElse(Vector3(i, j, k - 1), NewCell(NDead,(s,n) => s))
       )
     }))
 

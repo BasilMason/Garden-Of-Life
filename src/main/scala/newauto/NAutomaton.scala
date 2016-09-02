@@ -41,7 +41,26 @@ case class ThreeDim(override val state: List[NCell])(x: Int, y: Int, z: Int) ext
 
   override def defineNeighbours: Grid => Neighbourhood = NeighbourhoodBuilder.threeDimensionalRadiusOne(x, y, z)
 
-  //override def traverseAutomaton: (Grid, Neighbourhood) => List[NCell] = TraversalBuilder.threeDimensionalTraversal(x, y, z)
+  override def traverseAutomaton: (Grid, Neighbourhood) => List[NCell] = TraversalBuilder.threeDimensionalTraversal(x, y, z)
+
+}
+
+case class ThreeDimPar(override val state: List[NCell])(x: Int, y: Int, z: Int)(t: Int) extends AutomatonTemplate(state) {
+
+  override def constructGrid: List[NCell] => Grid = GridBuilder.threeDimenionalgrid(x, y, z)
+
+  override def defineNeighbours: Grid => Neighbourhood = NeighbourhoodBuilder.threeDimensionalRadiusOne(x, y, z)
+
+  override def traverseAutomaton: (Grid, Neighbourhood) => List[NCell] = TraversalBuilder.threeDimensionalTraversalPar(x, y, z)(t)
+
+}
+
+case class GardenPar(override val state: List[NCell])(x: Int, y: Int, z: Int)(t: Int) extends AutomatonTemplate(state) {
+
+  override def constructGrid: List[NCell] => Grid = GridBuilder.threeDimenionalgrid(x, y, z)
+
+  override def defineNeighbours: Grid => Neighbourhood = NeighbourhoodBuilder.threeDimensionalRadiusOne(x, y, z)
+
   override def traverseAutomaton: (Grid, Neighbourhood) => List[NCell] = TraversalBuilder.threeDimensionalTraversal(x, y, z)
 
 }

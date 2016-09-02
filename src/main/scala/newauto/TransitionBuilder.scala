@@ -47,4 +47,30 @@ case object TransitionBuilder {
 
   }
 
+  def basicSoil: (NState, Neighbours) => NState = (s, ns) => {
+
+    val waterUsage = ns.map(p => p._2.currentState match {
+      case NGrass(wa, sn, wi, vl, ag, vm) => 1
+      case NPlant(wa, sn, wi, vl, ag, vm) => 2
+      case _ => 0
+    }).sum
+
+    s match {
+      case NSoil(wa, sn, wi) => NSoil(wa - waterUsage, sn, wi)
+    }
+
+  }
+
+  def basicSky: (NState, Neighbours) => NState = (s, ns) => {
+    val d = ns.getOrElse("BOTTOM", NewCell(NDead, (s, ns) => s))
+
+    d.currentState match {
+      case NPlant(wa, sn, wi, vl, ag, vm) => NPlant(wa, sn, wi, vl, ag, vm)
+      case _ => s
+    }
+  }
+
+  def basicGrass: (NState, Neighbours) => NState = (s, ns) => s
+  def basicPlant: (NState, Neighbours) => NState = (s, ns) => s
+
 }

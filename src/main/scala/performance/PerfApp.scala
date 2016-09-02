@@ -1,6 +1,7 @@
 package performance
 
 
+import newauto.{NConfig, ThreeDim, ThreeDimPar}
 import org.scalameter._
 import parallel.TaskManager
 
@@ -9,11 +10,45 @@ import parallel.TaskManager
   */
 object PerfApp extends App {
 
-  val a1 = (1 to 1000).toList
-  val a2 = (1 to 10000).toList
-  val a3 = (1 to 100000).toList
-  val a4 = (1 to 1000000).toList
-  val a5 = (1 to 10000000).toList
+  val x = 20
+  val y = 20
+  val z = 20
+  val init = NConfig.classical(x, y, z)
+
+  println("Starting Test")
+
+  val timeNorm = withWarmer(new Warmer.Default) measure {
+    ThreeDim(init)(x, y, z).next
+  }
+
+  val timePar2 = withWarmer(new Warmer.Default) measure {
+    ThreeDimPar(init)(x, y, z)(2).next
+  }
+  val timePar5 = withWarmer(new Warmer.Default) measure {
+    ThreeDimPar(init)(x, y, z)(5).next
+  }
+  val timePar15 = withWarmer(new Warmer.Default) measure {
+    ThreeDimPar(init)(x, y, z)(15).next
+  }
+  val timePar25 = withWarmer(new Warmer.Default) measure {
+    ThreeDimPar(init)(x, y, z)(25).next
+  }
+  val timePar50 = withWarmer(new Warmer.Default) measure {
+    ThreeDimPar(init)(x, y, z)(50).next
+  }
+
+  println("Normal:\t\t" + timeNorm)
+  println("Parallel t = 2\t: " + timePar2)
+  println("Parallel t = 5\t: " + timePar5)
+  println("Parallel t = 15\t: " + timePar25)
+  println("Parallel t = 25\t: " + timePar15)
+  println("Parallel t = 50\t: " + timePar50)
+
+//  val a1 = (1 to 1000).toList
+//  val a2 = (1 to 10000).toList
+//  val a3 = (1 to 100000).toList
+//  val a4 = (1 to 1000000).toList
+//  val a5 = (1 to 10000000).toList
 
 //  val time1 = withWarmer(new Warmer.Default) measure {
 //    traverse(a1)
@@ -31,15 +66,15 @@ object PerfApp extends App {
 //    traverse(a4)
 //  }
 
-  val time5 = withWarmer(new Warmer.Default) measure {
-    traverse(a5)
-  }
+//  val time5 = withWarmer(new Warmer.Default) measure {
+//    traverse(a5)
+//  }
 
 //  println("1000: " + time1)
 //  println("10000: " + time2)
 //  println("100000: " + time3)
 //  println("1000000: " + time4)
-  println("10000000: " + time5)
+//  println("10000000: " + time5)
 
 //  val parTime1 = withWarmer(new Warmer.Default) measure {
 //    reduce(a1, 100000)
@@ -57,38 +92,38 @@ object PerfApp extends App {
 //    reduce(a4, 100000)
 //  }
 
-  val parTime5 = withWarmer(new Warmer.Default) measure {
-    reduce(a5, 1000000)
-  }
+//  val parTime5 = withWarmer(new Warmer.Default) measure {
+//    reduce(a5, 1000000)
+//  }
 
 //  println("1000 par: " + parTime1)
 //  println("10000 par: " + parTime2)
 //  println("100000 par: " + parTime3)
 //  println("1000000 par: " + parTime4)
-  println("10000000 par: " + parTime5)
-
-  def traverse(in: List[Int]): List[Int] = {
-
-    in.map(x => x * x)
-
-  }
-
-  def reduce(in: List[Int], t: Int): List[Int] = {
-
-    if (in.length < t) {
-      traverse(in)
-    } else {
-
-      val m = in.length / 2
-      val l = in.take(m)
-      val r = in.drop(m)
-
-      val (t1, t2) = TaskManager.parallel(reduce(l, t), reduce(r, t))
-
-      t1 ::: t2
-
-    }
-  }
+//  println("10000000 par: " + parTime5)
+//
+//  def traverse(in: List[Int]): List[Int] = {
+//
+//    in.map(x => x * x)
+//
+//  }
+//
+//  def reduce(in: List[Int], t: Int): List[Int] = {
+//
+//    if (in.length < t) {
+//      traverse(in)
+//    } else {
+//
+//      val m = in.length / 2
+//      val l = in.take(m)
+//      val r = in.drop(m)
+//
+//      val (t1, t2) = TaskManager.parallel(reduce(l, t), reduce(r, t))
+//
+//      t1 ::: t2
+//
+//    }
+//  }
 
 //  println("Map-Vals - Performance Checker")
 //
