@@ -1,5 +1,10 @@
 package newauto
 
+import automaton.garden.Noise
+
+import scala.collection.mutable
+import scala.util.Random
+
 /**
   * Created by Basil on 31/08/2016.
   */
@@ -55,43 +60,39 @@ case object NConfig {
 
   }
 
-//  def autoBasicFlat(x :Int, y: Int, z: Int, seeds: List[Int]): List[State] = {
-//
-//    val l = for {
-//      xs <- (0 until x * y * z)
-//    } yield {
-//      if (seeds.contains(xs)) PlantState(wind = 0.0
-//        , sun = 0.0
-//        , water = 1.0
-//        , gravity = 1.0
-//        , velocity = Vect(0.0, 0.0, 1.0)
-//        , age = 0
-//        , volume = 1)
-//      else if (xs < x * y) EarthState(wind = 0.0
-//        , sun = 0.0
-//        , water = 1.0
-//        , gravity = 1.0
-//        , velocity = Vect(0.0, 0.0, 0.0)
-//        , age = 0
-//        , volume = 1)
-//      else if (xs >= x * y && xs < 2 * x * y) GrassState(wind = 0.0
-//        , sun = 0.0
-//        , water = 1.0
-//        , gravity = 1.0
-//        , velocity = Vect(0.0, 0.0, 0.0)
-//        , age = 0
-//        , volume = 1)
-//      else SkyState(wind = 0.0
-//        , sun = 0.0
-//        , water = 1.0
-//        , gravity = 1.0
-//        , velocity = Vect(0.0, 0.0, 0.0)
-//        , age = 0
-//        , volume = 1)
-//    }
-//
-//    l.toList
-//
-//  }
+  def rugged(x: Int, y: Int, z: Int): List[NCell] = {
+
+    val cf = NCellFactory
+    val r = Random
+    val amp = 7
+    val noise = Noise.getNoise(x, y, amp)
+
+    val m: mutable.Map[(Int, Int), Int] = mutable.Map(noise: _*)
+
+    val l = for {
+      zs <- (0 until z)
+      ys <- (0 until y)
+      xs <- (0 until x)
+    } yield {
+
+      val h = m.getOrElse((xs, zs), -1)
+
+      if (h > 0) {
+        m((xs, zs)) -= 1
+        cf.getNCellGardenSoil
+      } else if (h == 0) {
+        m((xs, zs)) -= 1
+
+        if (r.nextInt % 10 == 0) cf.getNCellGardenPlant
+        else cf.getNCellGardenGrass
+
+
+      } else cf.getNCellGardenSky
+
+    }
+
+    l.toList
+
+  }
 
 }

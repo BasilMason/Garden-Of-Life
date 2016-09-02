@@ -61,6 +61,6 @@ case class GardenPar(override val state: List[NCell])(x: Int, y: Int, z: Int)(t:
 
   override def defineNeighbours: Grid => Neighbourhood = NeighbourhoodBuilder.threeDimensionalRadiusOne(x, y, z)
 
-  override def traverseAutomaton: (Grid, Neighbourhood) => List[NCell] = TraversalBuilder.threeDimensionalTraversal(x, y, z)
+  override def traverseAutomaton: (Grid, Neighbourhood) => List[NCell] = TraversalBuilder.threeDimensionalTraversalPar(x, y, z)(t)
 
 }
