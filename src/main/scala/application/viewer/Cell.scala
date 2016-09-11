@@ -173,5 +173,12 @@ case class NCellN(state: NState) extends Box {cell =>
         visible = true
       }
     }
+    case NTree(wa, sn, wi, vl, ag, vm) => {
+      cell.material = new PhongMaterial() {
+        diffuseColor = Color.SaddleBrown
+        specularColor = Color.SaddleBrown
+        visible = true
+      }
+    }
   }
 }

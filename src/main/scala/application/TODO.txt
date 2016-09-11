@@ -12,3 +12,6 @@ P2
 P3
 - logging / console logging
 - start generic ScalaLib
+
+
+/// SEED SEED SEED = Config

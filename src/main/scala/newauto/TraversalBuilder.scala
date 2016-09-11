@@ -23,12 +23,12 @@ object TraversalBuilder {
   def threeDimensionalTraversal(x: Int, y: Int, z: Int): (Grid, Neighbourhood) => List[NCell] = (g, ns) => {
 
     val l = for {
-      zs <- (0 until z)
-      ys <- (0 until y)
-      xs <- (0 until x)
-      c = g(Vector3(xs, ys, zs))
-      n = ns(Vector3(xs, ys, zs))
-    } yield NewCell(c.transitionFunction(c.currentState, n), c.transitionFunction)
+      zs <- 0 until z   // each plane
+      ys <- 0 until y   // each row
+      xs <- 0 until x   // each cell
+      c = g(Vector3(xs, ys, zs))    // the cell
+      n = ns(Vector3(xs, ys, zs))   // its neighbours
+    } yield NewCell(c.transitionFunction(c.currentState, n), c.transitionFunction)  // the next state
 
     l.toList
 
@@ -39,9 +39,9 @@ object TraversalBuilder {
     def traverse(beginning: Int, end: Int): List[NCell] = {
 
       val l = for {
-        zs <- (beginning until end)
-        ys <- (0 until y)
-        xs <- (0 until x)
+        zs <- beginning until end
+        ys <- 0 until y
+        xs <- 0 until x
         c = g(Vector3(xs, ys, zs))
         n = ns(Vector3(xs, ys, zs))
       } yield NewCell(c.transitionFunction(c.currentState, n), c.transitionFunction)
@@ -63,5 +63,20 @@ object TraversalBuilder {
     }
 
     reduce(0, z, t)
+  }
+
+  def threeDimensionalTraversalDP(x: Int, y: Int, z: Int)(t: Int): (Grid, Neighbourhood) => List[NCell] = (g, ns) => {
+
+    val vs = for {
+      zs <- 0 until z
+      ys <- 0 until y
+      xs <- 0 until x
+    } yield Vector3(xs,ys,zs)
+
+    val cs = for (v <- vs.par) yield (g(v), ns(v)) // get cell and neighbours
+    val l = for (p <- cs.par) yield NewCell(p._1.transitionFunction(p._1.currentState, p._2), p._1.transitionFunction) // call transition function
+
+    l.toList
+
   }
 }

@@ -20,4 +20,3 @@ case class NewCell(state: NState, rule: Transition) extends NCell {
 }
 
 
-

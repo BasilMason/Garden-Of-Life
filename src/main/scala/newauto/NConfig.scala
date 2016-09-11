@@ -83,7 +83,8 @@ case object NConfig {
       } else if (h == 0) {
         m((xs, zs)) -= 1
 
-        if (r.nextInt % 10 == 0) cf.getNCellGardenPlant
+        if (r.nextInt % 21 == 0) cf.getNCellGardenTree
+        else if (r.nextInt % 10 == 0) cf.getNCellGardenPlant
         else cf.getNCellGardenGrass
 
 

@@ -70,7 +70,62 @@ case object TransitionBuilder {
     }
   }
 
+  // dynamic states?!?
+
+  def dynamicSky: (NState, Neighbours) => NState = (s, ns) => {
+
+    val influencers = ns.filter(p => influencesMe(p._1, ((p._2.currentState.asInstanceOf[DynamicNState]).velocity.asInstanceOf[Vector3])))
+    val strongestSite = strongestInfluencer(influencers)
+    val strongest = ns(strongestSite)
+
+    strongest.currentState match {
+      case NPlant(wa, sn, wi, vl, ag, vm) => NPlant(wa, sn, wi, vl, ag, vm)
+      case NTree(wa, sn, wi, vl, ag, vm) => ag % 3 match {
+        case 0 if List("LEFT", "RIGHT", "BACK", "FRONT").contains(strongestSite) => NTree(wa, sn, wi, vl, ag, vm)
+        case _ => s
+      }
+      case _ => s
+    }
+  }
+
   def basicGrass: (NState, Neighbours) => NState = (s, ns) => s
   def basicPlant: (NState, Neighbours) => NState = (s, ns) => s
+  def basicTree: (NState, Neighbours) => NState = (s, ns) => s match {
+    case NTree(wa, sn, wi, vl, ag, vm) => NTree(wa, sn, wi, vl, ag + 1, vm)
+  }
+
+  def strongestInfluencer(ns: Neighbours): String = {
+
+    var m = 0.0
+    var s = "NONE"
+
+    for {
+      ks <- ns.keySet
+    } ks match {
+      case "LEFT" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].x) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].x); s = "LEFT"}
+      case "RIGHT" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].x) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].x); s = "RIGHT"}
+      case "FRONT" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].y) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].y); s = "FRONT"}
+      case "BACK" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].y) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].y); s = "BACK"}
+      case "BOTTOM" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].z) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].z); s = "BOTTOM"}
+      case "TOP" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].z) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].z); s = "TOP"}
+      //      case "LEFT" => ns.get(ks).get.velocity
+      case _ => ;
+    }
+
+    s
+
+  }
+
+  def influencesMe(site: String, v: Vector3): Boolean = {
+    site match {
+      case "LEFT" if v.x > 0 => true
+      case "RIGHT" if v.x > 0 => true
+      case "FRONT" if v.y > 0 => true
+      case "BACK" if v.y > 0 => true
+      case "BOTTOM" if v.z > 0 => true
+      case "TOP" if v.z < 0 => true
+      case _ => false
+    }
+  }
 
 }

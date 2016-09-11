@@ -1,7 +1,7 @@
 package performance
 
 
-import newauto.{NConfig, ThreeDim, ThreeDimPar}
+import newauto.{NConfig, ThreeDim, ThreeDimDP, ThreeDimPar}
 import org.scalameter._
 import parallel.TaskManager
 
@@ -24,25 +24,32 @@ object PerfApp extends App {
   val timePar2 = withWarmer(new Warmer.Default) measure {
     ThreeDimPar(init)(x, y, z)(2).next
   }
-  val timePar5 = withWarmer(new Warmer.Default) measure {
-    ThreeDimPar(init)(x, y, z)(5).next
+
+  val timePar3 = withWarmer(new Warmer.Default) measure {
+    ThreeDimDP(init)(x, y, z)(2).next
   }
-  val timePar15 = withWarmer(new Warmer.Default) measure {
-    ThreeDimPar(init)(x, y, z)(15).next
-  }
-  val timePar25 = withWarmer(new Warmer.Default) measure {
-    ThreeDimPar(init)(x, y, z)(25).next
-  }
-  val timePar50 = withWarmer(new Warmer.Default) measure {
-    ThreeDimPar(init)(x, y, z)(50).next
-  }
+
+//  val timePar5 = withWarmer(new Warmer.Default) measure {
+//    ThreeDimPar(init)(x, y, z)(5).next
+//  }
+//  val timePar15 = withWarmer(new Warmer.Default) measure {
+//    ThreeDimPar(init)(x, y, z)(15).next
+//  }
+//  val timePar25 = withWarmer(new Warmer.Default) measure {
+//    ThreeDimPar(init)(x, y, z)(25).next
+//  }
+//  val timePar50 = withWarmer(new Warmer.Default) measure {
+//    ThreeDimPar(init)(x, y, z)(50).next
+//  }
 
   println("Normal:\t\t" + timeNorm)
   println("Parallel t = 2\t: " + timePar2)
-  println("Parallel t = 5\t: " + timePar5)
-  println("Parallel t = 15\t: " + timePar25)
-  println("Parallel t = 25\t: " + timePar15)
-  println("Parallel t = 50\t: " + timePar50)
+  println("DP: " + timePar3)
+
+//  println("Parallel t = 5\t: " + timePar5)
+//  println("Parallel t = 15\t: " + timePar25)
+//  println("Parallel t = 25\t: " + timePar15)
+//  println("Parallel t = 50\t: " + timePar50)
 
 //  val a1 = (1 to 1000).toList
 //  val a2 = (1 to 10000).toList
