@@ -15,8 +15,8 @@ case object NCellFactory {
 
   def getNCellGardenSoil: NCell = NewCell(NSoil(10.0, 1.0, 1.0), TransitionBuilder.basicSoil)
   def getNCellGardenSky: NCell = NewCell(NSky(10.0, 1.0, 1.0), TransitionBuilder.dynamicSky)
-  def getNCellGardenGrass: NCell = NewCell(NGrass(10.0, 1.0, 1.0, Vector3(0, 0, 1), 0, 1), TransitionBuilder.basicGrass)
-  def getNCellGardenPlant: NCell = NewCell(NPlant(10.0, 1.0, 1.0, Vector3(0, 0, 1), 0, 1), TransitionBuilder.basicPlant)
-  def getNCellGardenTree: NCell = NewCell(NTree(10.0, 1.0, 1.0, Vector3(0, 1, 10), 0, 1), TransitionBuilder.basicTree)
+  def getNCellGardenGrass: NCell = NewCell(NGrass(10.0, 1.0, 1.0, List(Vector3(0, 0, 1)), 0, 1), TransitionBuilder.basicGrass)
+  def getNCellGardenPlant: NCell = NewCell(NPlant(10.0, 1.0, 1.0, List(Vector3(0, 0, 1)), 0, 1), TransitionBuilder.basicPlant)
+  def getNCellGardenTree: NCell = NewCell(NTree(10.0, 1.0, 1.0, List(Vector3(0, 3, 0)), 0, 1), TransitionBuilder.basicTree)
 
 }

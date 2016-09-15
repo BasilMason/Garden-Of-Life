@@ -50,9 +50,9 @@ case object NConfig {
       xs <- (0 until x)
       v = Vector3(xs, ys, zs)
     } yield {
-      if (s.contains(v)) cf.getNCellGardenPlant
-      else if (ys < 1) cf.getNCellGardenSoil
-      else if (ys == 1) cf.getNCellGardenGrass
+      if (s.contains(v)) cf.getNCellGardenTree
+      else if (zs < 1) cf.getNCellGardenSoil
+      else if (zs == 1) cf.getNCellGardenGrass
       else cf.getNCellGardenSky
     }
 
@@ -75,13 +75,13 @@ case object NConfig {
       xs <- (0 until x)
     } yield {
 
-      val h = m.getOrElse((xs, zs), -1)
+      val h = m.getOrElse((xs, ys), -1)
 
       if (h > 0) {
-        m((xs, zs)) -= 1
+        m((xs, ys)) -= 1
         cf.getNCellGardenSoil
       } else if (h == 0) {
-        m((xs, zs)) -= 1
+        m((xs, ys)) -= 1
 
         if (r.nextInt % 21 == 0) cf.getNCellGardenTree
         else if (r.nextInt % 10 == 0) cf.getNCellGardenPlant

@@ -44,7 +44,13 @@ object TraversalBuilder {
         xs <- 0 until x
         c = g(Vector3(xs, ys, zs))
         n = ns(Vector3(xs, ys, zs))
-      } yield NewCell(c.transitionFunction(c.currentState, n), c.transitionFunction)
+      } yield {
+
+        val s = c.transitionFunction(c.currentState, n)
+        val t = functionFromState(s)
+
+        NewCell(s, t)
+      }
 
       l.toList
 
@@ -79,4 +85,13 @@ object TraversalBuilder {
     l.toList
 
   }
+
+  def functionFromState(s: NState): Transition = s match {
+    case NSoil(wa,sn,wi) => TransitionBuilder.basicSoil
+    case NSky(wa,sn,wi) => TransitionBuilder.dynamicSky
+    case NGrass(wa,sn,wi,vl,ag,vm) => TransitionBuilder.basicGrass
+    case NPlant(wa,sn,wi,vl,ag,vm) => TransitionBuilder.basicPlant
+    case NTree(wa,sn,wi,vl,ag,vm) => TransitionBuilder.basicTree
+  }
+
 }

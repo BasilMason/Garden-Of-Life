@@ -6,7 +6,7 @@ import javafx.scene.control.{ToggleButton => JfxToggleBtn}
 import application.viewer.ContentModel
 import automaton.automata.{Garden, OneDimensional}
 import automaton.garden.{BinaryState, Config, GardenState}
-import newauto.{GardenPar, NCell, NConfig}
+import newauto.{GardenPar, NCell, NConfig, Vector3}
 
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -329,6 +329,8 @@ object TestApp extends JFXApp {
     println("Y: " + yDim)
     println("Z: " + zDim)
 
+    cm.clearContent
+
     histCount = 1
     curConfBin = List.empty
     histConfBin = List.empty
@@ -343,17 +345,18 @@ object TestApp extends JFXApp {
         val c = plane(histCount,xDim, curConfBin)
         val g = new Group
         c.foreach(r => g.children.add(r))
-        cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
+        cm.setContent(g, ((xDim * 15)+5)/2, 0, (((zDim - 1) * 15)+5)/2)
       }
       case "2D" => {
 
         cm.clearContent
 
-        curConfN = NConfig.rugged(xDim, yDim, zDim)
+        //curConfN = NConfig.rugged(xDim, yDim, zDim)
+        curConfN = NConfig.flat(xDim, yDim, zDim, List(Vector3(xDim/2,yDim/2,1)))
         val c = cubeN(xDim, yDim, zDim, curConfN.map(c => c.currentState)).flatten
         val g = new Group
         c.foreach(r => g.children.add(r))
-        cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
+        cm.setContent(g, ((xDim * 15))/2, 0, (((zDim - 1) * 15)+5)/2)
         layout.center = cm.getSubScene()
 
       }
@@ -365,7 +368,7 @@ object TestApp extends JFXApp {
         val c = cube(xDim, yDim, zDim, curConfGar).flatten
         val g = new Group
         c.foreach(r => g.children.add(r))
-        cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
+        cm.setContent(g, ((xDim * 15)+5)/2, 0, (((zDim - 1) * 15)+5)/2)
         layout.center = cm.getSubScene()
 
       }
@@ -392,18 +395,22 @@ object TestApp extends JFXApp {
         val c = plane(histCount, xDim, histConfBin)
         val g = new Group
         c.foreach(r => g.children.add(r))
-        cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
+        cm.setContent(g, ((xDim * 15)+5)/2, 0, (((zDim - 1) * 15)+5)/2)
 
       }
       case "2D" => {
 
         cm.clearContent
 
+        val runtime = Runtime.getRuntime()
+        System.out.println("Used Memory:"
+          + (runtime.totalMemory() - runtime.freeMemory()))
+
         curConfN = GardenPar(curConfN)(xDim, yDim, zDim)(3).next
         val c = cubeN(xDim, yDim, zDim, curConfN.map(c => c.currentState)).flatten
         val g = new Group
         c.foreach(r => g.children.add(r))
-        cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
+        cm.setContent(g, ((xDim * 15)+5)/2, 0, (((zDim - 1) * 15)+5)/2)
 
       }
       case "3D" => {
@@ -414,7 +421,7 @@ object TestApp extends JFXApp {
         val c = cube(xDim, yDim, zDim, curConfGar).flatten
         val g = new Group
         c.foreach(r => g.children.add(r))
-        cm.setContent(g, ((xDim * 15)+5)/2, 0, 0)
+        cm.setContent(g, ((xDim * 15)+5)/2, 0, (((zDim - 1) * 15)+5)/2)
 
 
       }

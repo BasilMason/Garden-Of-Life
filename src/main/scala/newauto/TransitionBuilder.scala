@@ -1,5 +1,7 @@
 package newauto
 
+import scala.util.Random
+
 /**
   * Created by Basil on 31/08/2016.
   */
@@ -72,60 +74,212 @@ case object TransitionBuilder {
 
   // dynamic states?!?
 
+
+
+
   def dynamicSky: (NState, Neighbours) => NState = (s, ns) => {
 
-    val influencers = ns.filter(p => influencesMe(p._1, ((p._2.currentState.asInstanceOf[DynamicNState]).velocity.asInstanceOf[Vector3])))
-    val strongestSite = strongestInfluencer(influencers)
-    val strongest = ns(strongestSite)
+    val r = Random
+    val n = r.nextInt
 
-    strongest.currentState match {
-      case NPlant(wa, sn, wi, vl, ag, vm) => NPlant(wa, sn, wi, vl, ag, vm)
-      case NTree(wa, sn, wi, vl, ag, vm) => ag % 3 match {
-        case 0 if List("LEFT", "RIGHT", "BACK", "FRONT").contains(strongestSite) => NTree(wa, sn, wi, vl, ag, vm)
+    val influencers = ns.map(p => {
+      val infl = influencesMe2(p._1, stateToVector(p._2.currentState))
+      (p._1, infl._1, infl._2)
+    })
+
+
+    val strongInfluencers = influencers.filter(p => p._2 == true).toList
+
+    val theStrongest = strongestInfluencer2(strongInfluencers)
+
+    if (theStrongest._1 == "NONE") s
+    else {
+      val strongest = ns(theStrongest._1)
+
+      strongest.currentState match {
+        case NPlant(wa, sn, wi, vl, ag, vm) => NPlant(wa, sn, wi, vl, ag, vm)
+        case NGrass(wa, sn, wi, vl, ag, vm) => n % 30 match {
+          case 0 => NGrass(wa, sn, wi, vl, ag + 1, vm)
+          case _ => NSky(wa, sn, wi)
+        }
+
+        case NTree(wa, sn, wi, vl, ag, vm) => {
+
+          if (List("BOTTOM").contains(theStrongest._1)) NTree(wa, sn, wi, List(Vector3(3 + (n % 3),0,3 + (n % 3)),Vector3(-3 - (n % 3),0,-3 - (n % 3))), ag, vm)
+          else if (List("LEFT", "RIGHT", "BACK", "FRONT").contains(theStrongest._1) && theStrongest._2.x == 0 && theStrongest._2.z == 0) NTree(wa, sn, wi, vl.map(v => Vector3(0, 3, 0)), ag, vm)
+          else if (List("LEFT", "RIGHT", "BACK", "FRONT").contains(theStrongest._1)) NTree(wa, sn, wi, vl.map(v => Vector3(v.x-1, 0, v.z-1)), ag, vm)
+          else s
+
+        }
         case _ => s
       }
-      case _ => s
     }
+
   }
 
-  def basicGrass: (NState, Neighbours) => NState = (s, ns) => s
+  def basicGrass: (NState, Neighbours) => NState = (s, ns) => s match {
+    case NGrass(wa, sn, wi, vl, ag, vm) => NGrass(wa, sn, wi, vl, ag + 1, vm)
+  }
   def basicPlant: (NState, Neighbours) => NState = (s, ns) => s
   def basicTree: (NState, Neighbours) => NState = (s, ns) => s match {
-    case NTree(wa, sn, wi, vl, ag, vm) => NTree(wa, sn, wi, vl, ag + 1, vm)
+    case NTree(wa, sn, wi, vl, ag, vm) => NTree(wa, sn, wi, vl.map(v => Vector3(v.x,v.y + 1,v.z)), ag + 1, vm)
   }
 
-  def strongestInfluencer(ns: Neighbours): String = {
+//  def strongestInfluencer(ns: Neighbours): String = {
+//
+//    var m = 0.0
+//    var s = "NONE"
+//
+//    for {
+//      ks <- ns.keySet
+//    } {
+//
+//      val v = stateToVector(ns(ks).currentState)
+//
+//      if (v.x == 0 && v.y == 0 && v.z == 0) s
+//      else ks match {
+//
+//        case "LEFT" => if (Math.abs(stateToVector(ns(ks).currentState).x) > m) {m = Math.abs(stateToVector(ns(ks).currentState).x); s = "LEFT"}
+//        case "RIGHT" => if (Math.abs(stateToVector(ns(ks).currentState).x) > m) {m = Math.abs(stateToVector(ns(ks).currentState).x); s = "RIGHT"}
+//        case "FRONT" => if (Math.abs(stateToVector(ns(ks).currentState).z) > m) {m = Math.abs(stateToVector(ns(ks).currentState).z); s = "FRONT"}
+//        case "BACK" => if (Math.abs(stateToVector(ns(ks).currentState).z) > m) {m = Math.abs(stateToVector(ns(ks).currentState).z); s = "BACK"}
+//        case "BOTTOM" => if (Math.abs(stateToVector(ns(ks).currentState).y) > m) {m = Math.abs(stateToVector(ns(ks).currentState).y); s = "BOTTOM"}
+//        case "TOP" => if (Math.abs(stateToVector(ns(ks).currentState).y) > m) {m = Math.abs(stateToVector(ns(ks).currentState).y); s = "TOP"}
+//        case _ => ;
+//      }
+//
+//    }
+//
+//    s
+//
+//  }
 
-    var m = 0.0
-    var s = "NONE"
+  def strongestInfluencer2(ns: List[(String, Boolean, Vector3)]): (String,Vector3) = {
+
+    var strongest = 0
+    var strongestVector = Vector3(0,0,0)
+    var site = "NONE"
 
     for {
-      ks <- ns.keySet
-    } ks match {
-      case "LEFT" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].x) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].x); s = "LEFT"}
-      case "RIGHT" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].x) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].x); s = "RIGHT"}
-      case "FRONT" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].y) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].y); s = "FRONT"}
-      case "BACK" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].y) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].y); s = "BACK"}
-      case "BOTTOM" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].z) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].z); s = "BOTTOM"}
-      case "TOP" => if (Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].z) > m) {m = Math.abs(ns(ks).asInstanceOf[DynamicNState].velocity.asInstanceOf[Vector3].z); s = "TOP"}
-      //      case "LEFT" => ns.get(ks).get.velocity
-      case _ => ;
+      n <- ns
+    } {
+
+      n._1 match {
+        case "LEFT" if Math.abs(n._3.x) > Math.abs(strongest) => {
+          strongest = n._3.x
+          site = "LEFT"
+          strongestVector = n._3
+        }
+        case "RIGHT" if Math.abs(n._3.x) > Math.abs(strongest) => {
+          strongest = n._3.x
+          site = "RIGHT"
+          strongestVector = n._3
+        }
+        case "TOP" if Math.abs(n._3.y) > Math.abs(strongest) => {
+          strongest = n._3.y
+          site = "TOP"
+          strongestVector = n._3
+        }
+        case "BOTTOM" if Math.abs(n._3.y) > Math.abs(strongest) => {
+          strongest = n._3.y
+          site = "BOTTOM"
+          strongestVector = n._3
+        }
+        case "BACK" if Math.abs(n._3.z) > Math.abs(strongest) => {
+          strongest = n._3.z
+          site = "BACK"
+          strongestVector = n._3
+        }
+        case "FRONT" if Math.abs(n._3.z) > Math.abs(strongest) => {
+          strongest = n._3.z
+          site = "FRONT"
+          strongestVector = n._3
+        }
+        case _ => ;
+
+      }
+
     }
 
-    s
+    (site, strongestVector)
 
   }
 
-  def influencesMe(site: String, v: Vector3): Boolean = {
-    site match {
-      case "LEFT" if v.x > 0 => true
-      case "RIGHT" if v.x > 0 => true
-      case "FRONT" if v.y > 0 => true
-      case "BACK" if v.y > 0 => true
-      case "BOTTOM" if v.z > 0 => true
-      case "TOP" if v.z < 0 => true
-      case _ => false
+  def stateToVector(s: NState): List[Vector3] = s match {
+    case DynamicNState(water, sunlight, wind, velocity, age, volume) => velocity match {
+      case x :: xs => velocity
+      case _ => List(Vector3(0,0,0))
     }
+    case _ => List(Vector3(0,0,0))
+  }
+
+  def influencesMe(site: String, v: List[Vector3]): Boolean = {
+
+    var infl = false
+
+    for {
+      vs <- v
+    } {
+      if (!infl) {
+        infl = site match {
+          case "LEFT" if vs.x > 0 => true
+          case "RIGHT" if vs.x < 0 => true
+          case "FRONT" if vs.z > 0 => true
+          case "BACK" if vs.z < 0 => true
+          case "BOTTOM" if vs.y > 0 => true
+          case "TOP" if vs.y < 0 => true
+          case _ => false
+        }
+      }
+    }
+
+    infl
+
+  }
+
+  def influencesMe2(site: String, v: List[Vector3]): (Boolean, Vector3) = {
+
+    var infl = false
+    var infls = Vector3(0,0,0)
+
+    for {
+      vs <- v
+    } {
+      if (!infl) {
+        site match {
+          case "LEFT" if vs.x > 0 => {
+            infl = true
+            infls = vs
+          }
+          case "RIGHT" if vs.x < 0 => {
+            infl = true
+            infls = vs
+          }
+          case "FRONT" if vs.z > 0 => {
+            infl = true
+            infls = vs
+          }
+          case "BACK" if vs.z < 0 => {
+            infl = true
+            infls = vs
+          }
+          case "BOTTOM" if vs.y > 0 => {
+            infl = true
+            infls = vs
+          }
+          case "TOP" if vs.y < 0 => {
+            infl = true
+            infls = vs
+          }
+          case _ => {
+            infl = false
+          }
+        }
+      }
+    }
+
+    (infl,infls)
+
   }
 
 }

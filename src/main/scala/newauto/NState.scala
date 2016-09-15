@@ -16,10 +16,23 @@ sealed trait GardenNState extends NState {
   def wind: Double
 }
 sealed trait StaticNState extends GardenNState
+object StaticNState {
+  def unapply(ss: StaticNState): Option[(Double, Double, Double)] =
+    Option(ss) map { e =>
+      (ss.water, ss.sunlight, ss.wind)
+    }
+}
+
 sealed trait DynamicNState extends GardenNState {
-  def velocity: VectorN
+  def velocity: List[Vector3]
   def age: Int
   def volume: Int
+}
+object DynamicNState {
+  def unapply(ds: DynamicNState): Option[(Double, Double, Double, List[Vector3], Int, Int)] =
+    Option(ds) map { e =>
+      (ds.water, ds.sunlight, ds.wind, ds.velocity, ds.age, ds.volume)
+    }
 }
 
 abstract class NStatic(_water: Double, _sunlight: Double, _wind: Double) extends StaticNState {
@@ -28,7 +41,7 @@ abstract class NStatic(_water: Double, _sunlight: Double, _wind: Double) extends
   override def wind = _wind
 }
 
-abstract class NDynamic(_water: Double, _sunlight: Double, _wind: Double, _velocity: Vector3, _age: Int, _volume: Int) extends DynamicNState {
+abstract class NDynamic(_water: Double, _sunlight: Double, _wind: Double, _velocity: List[Vector3], _age: Int, _volume: Int) extends DynamicNState {
   override def water = _water
   override def sunlight = _sunlight
   override def wind = _wind
@@ -40,9 +53,9 @@ abstract class NDynamic(_water: Double, _sunlight: Double, _wind: Double, _veloc
 case class NSoil(_water: Double, _sunlight: Double, _wind: Double) extends NStatic(_water, _sunlight, _wind)
 case class NSky(_water: Double, _sunlight: Double, _wind: Double) extends NStatic(_water, _sunlight, _wind)
 
-case class NGrass(_water: Double, _sunlight: Double, _wind: Double, _velocity: Vector3, _age: Int, _volume: Int) extends NDynamic(_water, _sunlight, _wind, _velocity, _age, _volume)
-case class NPlant(_water: Double, _sunlight: Double, _wind: Double, _velocity: Vector3, _age: Int, _volume: Int) extends NDynamic(_water, _sunlight, _wind, _velocity, _age, _volume)
-case class NTree(_water: Double, _sunlight: Double, _wind: Double, _velocity: Vector3, _age: Int, _volume: Int) extends NDynamic(_water, _sunlight, _wind, _velocity, _age, _volume)
+case class NGrass(_water: Double, _sunlight: Double, _wind: Double, _velocity: List[Vector3], _age: Int, _volume: Int) extends NDynamic(_water, _sunlight, _wind, _velocity, _age, _volume)
+case class NPlant(_water: Double, _sunlight: Double, _wind: Double, _velocity: List[Vector3], _age: Int, _volume: Int) extends NDynamic(_water, _sunlight, _wind, _velocity, _age, _volume)
+case class NTree(_water: Double, _sunlight: Double, _wind: Double, _velocity: List[Vector3], _age: Int, _volume: Int) extends NDynamic(_water, _sunlight, _wind, _velocity, _age, _volume)
 
 
 

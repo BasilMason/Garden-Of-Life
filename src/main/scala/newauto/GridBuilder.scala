@@ -38,6 +38,7 @@ case object NGridBuilder {
 
     require(init.length == x * y * z, "Number of states provided must match dimensions")
 
+    // divide by zero clauses removed for brevity
     def indexToCoordinate(x: Int, y: Int, z: Int)(i: Int): Vector3 = {
       Vector3(
         if (x==0) 0

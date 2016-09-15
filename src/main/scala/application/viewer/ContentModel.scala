@@ -104,11 +104,18 @@ class ContentModel(height: Double, width: Double) {sub =>
   def setContent(content: Node, xTrans: Int, yTrans: Int, zTrans: Int) = {
     allCells = allCells ::: content :: Nil
     allCells.foreach(c => c.setTranslateX(-xTrans))
+    allCells.foreach(c => c.setTranslateY(-yTrans))
+    allCells.foreach(c => c.setTranslateZ(-zTrans))
     root.children.add(content)
   }
 
   def clearContent = {
+
     allCells.foreach(c => root.children.remove(c))
+    allCells = List.empty
+
+    println("ROOT")
+
   }
 
   //public void setContent(Node content) { autoScalingGroup.getChildren().add(content);  }
